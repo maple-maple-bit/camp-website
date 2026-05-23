@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <title>ポケモン図鑑</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        font-family: "Hiragino Mincho ProN", "Yu Mincho", "Georgia", serif;
+        min-height: 100vh;
+        background: linear-gradient(180deg,
+          #a8d8ea 0%,
+          #c9e8f5 32%,
+          #e8f4e8 66%,
+          #7ab648 66%,
+          #5a8a3c 100%
+        );
+        overflow-x: hidden;
+      }
+
+      /* 雲 */
+      .clouds {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 60%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .cloud {
+        position: absolute;
+        background: white;
+        border-radius: 50px;
+        opacity: 0.88;
+        filter: blur(1px);
+      }
+
+      .cloud::before, .cloud::after {
+        content: "";
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+      }
+
+      .c1 { width: 130px; height: 38px; top: 8%;  animation: drift 30s linear infinite; left: -160px; }
+      .c1::before { width: 64px; height: 64px; top: -30px; left: 20px; }
+      .c1::after  { width: 48px; height: 48px; top: -20px; left: 60px; }
+
+      .c2 { width: 100px; height: 28px; top: 20%; animation: drift 42s linear infinite; animation-delay: -14s; left: -120px; opacity: 0.72; }
+      .c2::before { width: 48px; height: 48px; top: -24px; left: 14px; }
+      .c2::after  { width: 34px; height: 34px; top: -15px; left: 44px; }
+
+      .c3 { width: 160px; height: 44px; top: 5%;  animation: drift 52s linear infinite; animation-delay: -22s; left: -180px; opacity: 0.62; }
+      .c3::before { width: 76px; height: 76px; top: -38px; left: 24px; }
+      .c3::after  { width: 56px; height: 56px; top: -26px; left: 76px; }
+
+      .c4 { width: 90px; height: 24px; top: 14%; animation: drift 36s linear infinite; animation-delay: -8s; left: -110px; opacity: 0.55; }
+      .c4::before { width: 42px; height: 42px; top: -20px; left: 10px; }
+      .c4::after  { width: 30px; height: 30px; top: -13px; left: 38px; }
+
+      @keyframes drift {
+        from { transform: translateX(0); }
+        to   { transform: translateX(calc(100vw + 220px)); }
+      }
+
+      /* 草 */
+      .grass-layer {
+        position: fixed;
+        bottom: 0; left: 0;
+        width: 100%; height: 36%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .grass-blades {
+        position: absolute;
+        bottom: 0; width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+      }
+
+      .blade {
+        width: 6px;
+        background: linear-gradient(to top, #3d6b24, #7ab648);
+        border-radius: 3px 3px 0 0;
+        transform-origin: bottom center;
+        animation: sway 3s ease-in-out infinite;
+      }
+
+      .blade:nth-child(even) { animation-direction: alternate-reverse; }
+      .blade:nth-child(3n)   { animation-duration: 3.6s; }
+      .blade:nth-child(5n)   { animation-duration: 2.7s; }
+
+      @keyframes sway {
+        0%, 100% { transform: rotate(-4deg); }
+        50%       { transform: rotate(4deg); }
+      }
+
+      /* 木 */
+      .tree { position: fixed; bottom: 32%; pointer-events: none; z-index: 1; }
+      .tree-left  { left: 1%; }
+      .tree-right { right: 1%; transform: scaleX(-1); }
+
+      /* ページ全体レイアウト */
+      .page {
+        position: relative;
+        z-index: 10;
+        padding: 40px 20px 60px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+
+      /* ヘッダーカード */
+      .header-card {
+        background: linear-gradient(160deg, #fdf3dc, #f5e6c0);
+        border: 3px solid #c8a96e;
+        border-radius: 20px;
+        padding: 28px 32px;
+        margin-bottom: 28px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 8px 32px #0000002a, inset 0 1px 0 #fffde8, 0 0 0 6px #e8d5a088;
+        position: relative;
+        animation: fadeIn 0.6s ease both;
+      }
+
+      .header-card::before {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border: 1px dashed #c8a96e66;
+        border-radius: 14px;
+        pointer-events: none;
+      }
+
+      .back-link {
+        font-size: 0.8rem;
+        color: #9a7a40;
+        text-decoration: none;
+        transition: color 0.2s;
+        flex-shrink: 0;
+      }
+
+      .back-link:hover { color: #5a3a10; }
+
+      .header-card h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #3d2b1f;
+        letter-spacing: 0.06em;
+        text-shadow: 0 1px 0 #fff8e8;
+      }
+
+      .reload-btn {
+        margin-left: auto;
+        background: linear-gradient(160deg, #6a9a3a, #4a7a22);
+        color: #f5f0e0;
+        border: 2px solid #3a6014;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-family: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.04em;
+        box-shadow: 0 3px 0 #2d4e10;
+        transition: filter 0.15s, transform 0.15s;
+        flex-shrink: 0;
+      }
+
+      .reload-btn:hover  { filter: brightness(1.1); }
+      .reload-btn:active { box-shadow: none; transform: translateY(3px); }
+
+      /* カードグリッド */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
+        gap: 16px;
+      }
+
+      /* ポケモンカード */
+      .poke-card {
+        background: linear-gradient(160deg, #fdf3dc, #f5e6c0);
+        border: 3px solid #c8a96e;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px #0000001a, 0 0 0 4px #e8d5a066;
+        transition: transform 0.2s, box-shadow 0.2s;
+        animation: fadeIn 0.4s ease both;
+        position: relative;
+      }
+
+      .poke-card::before {
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border: 1px dashed #c8a96e55;
+        border-radius: 12px;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .poke-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 28px #0000002a, 0 0 0 4px #c8a96e88;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .card-img {
+        background: radial-gradient(circle at 55% 40%, #fffbef, #f0e8d0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 12px 4px;
+        min-height: 120px;
+        position: relative;
+      }
+
+      .card-img img {
+        width: 100px;
+        height: 100px;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 6px #8a6a3044);
+      }
+
+      .card-number {
+        position: absolute;
+        top: 7px;
+        left: 10px;
+        font-size: 0.7rem;
+        color: #c8a96e;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+      }
+
+      .card-body {
+        padding: 8px 12px 14px;
+        border-top: 2px solid #e8d0a0;
+      }
+
+      .card-name {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #3d2b1f;
+        margin-bottom: 7px;
+        letter-spacing: 0.04em;
+        text-shadow: 0 1px 0 #fff8e8;
+      }
+
+      .types {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+      }
+
+      .type-badge {
+        font-size: 0.66rem;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 999px;
+        color: white;
+        text-shadow: 0 1px 2px #0004;
+        letter-spacing: 0.04em;
+        border: 1px solid #0001;
+      }
+
+      /* スケルトン */
+      .skeleton-img {
+        width: 100px; height: 100px;
+        border-radius: 50%;
+        background: #c8a96e33;
+        animation: pulse 1.2s ease-in-out infinite;
+      }
+
+      .skeleton-text {
+        height: 13px;
+        border-radius: 6px;
+        background: #c8a96e33;
+        animation: pulse 1.2s ease-in-out infinite;
+        margin-bottom: 8px;
+      }
+
+      .skeleton-badge {
+        height: 18px; width: 48px;
+        border-radius: 999px;
+        background: #c8a96e33;
+        animation: pulse 1.2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.4; }
+        50%       { opacity: 1; }
+      }
+
+      footer {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 8px 24px 32px;
+        font-size: 0.78rem;
+        color: #5a8a3c;
+        letter-spacing: 0.08em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="clouds">
+      <div class="cloud c1"></div>
+      <div class="cloud c2"></div>
+      <div class="cloud c3"></div>
+      <div class="cloud c4"></div>
+    </div>
+
+    <div class="tree tree-left">
+      <svg width="90" height="180" viewBox="0 0 80 180">
+        <rect x="34" y="110" width="12" height="70" fill="#6b4c2a" rx="4"/>
+        <ellipse cx="40" cy="98" rx="34" ry="38" fill="#3d6b24"/>
+        <ellipse cx="40" cy="76" rx="26" ry="30" fill="#4e8030"/>
+        <ellipse cx="40" cy="56" rx="18" ry="22" fill="#5a9438"/>
+      </svg>
+    </div>
+
+    <div class="tree tree-right">
+      <svg width="90" height="180" viewBox="0 0 80 180">
+        <rect x="34" y="110" width="12" height="70" fill="#6b4c2a" rx="4"/>
+        <ellipse cx="40" cy="98" rx="34" ry="38" fill="#3d6b24"/>
+        <ellipse cx="40" cy="76" rx="26" ry="30" fill="#4e8030"/>
+        <ellipse cx="40" cy="56" rx="18" ry="22" fill="#5a9438"/>
+      </svg>
+    </div>
+
+    <div class="grass-layer">
+      <div class="grass-blades" id="grassBlades"></div>
+    </div>
+
+    <div class="page">
+      <div class="header-card">
+        <a href="index.html" class="back-link">← もどる</a>
+        <h1>📖 ポケモン図鑑</h1>
+        <button class="reload-btn" id="reloadBtn">🍃 別のポケモン</button>
+      </div>
+
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <footer>© 2026 Example Website 🌱</footer>
+
+    <script>
+      // 草を生成
+      const blades = document.getElementById("grassBlades");
+      for (let i = 0; i < 70; i++) {
+        const b = document.createElement("div");
+        b.className = "blade";
+        b.style.height = (22 + Math.random() * 44) + "px";
+        b.style.animationDelay = (Math.random() * 3) + "s";
+        blades.appendChild(b);
+      }
+
+      const TYPE_COLORS = {
+        normal: "#9fa19f", fire: "#e62829", water: "#2980ef", grass: "#3fa129",
+        electric: "#fac000", ice: "#3dcef3", fighting: "#ff8000", poison: "#9141cb",
+        ground: "#915121", flying: "#81b9ef", psychic: "#ef4179", bug: "#91a119",
+        rock: "#afa981", ghost: "#704170", dragon: "#5060e1", dark: "#624d4e",
+        steel: "#60a1b8", fairy: "#ef70ef",
+      };
+
+      const TYPE_JA = {
+        normal: "ノーマル", fire: "ほのお", water: "みず", grass: "くさ",
+        electric: "でんき", ice: "こおり", fighting: "かくとう", poison: "どく",
+        ground: "じめん", flying: "ひこう", psychic: "エスパー", bug: "むし",
+        rock: "いわ", ghost: "ゴースト", dragon: "ドラゴン", dark: "あく",
+        steel: "はがね", fairy: "フェアリー",
+      };
+
+      const TOTAL = 898;
+      const COUNT = 12;
+
+      function randomIds() {
+        const ids = new Set();
+        while (ids.size < COUNT) ids.add(Math.floor(Math.random() * TOTAL) + 1);
+        return [...ids];
+      }
+
+      function getJaName(species) {
+        const ja = species.names.find(n => n.language.name === "ja");
+        if (ja) return ja.name;
+        const hrkt = species.names.find(n => n.language.name === "ja-Hrkt");
+        return hrkt ? hrkt.name : null;
+      }
+
+      function renderSkeleton(grid) {
+        grid.innerHTML = "";
+        for (let i = 0; i < COUNT; i++) {
+          const el = document.createElement("div");
+          el.className = "poke-card";
+          el.style.animationDelay = `${i * 0.05}s`;
+          el.innerHTML = `
+            <div class="card-img"><div class="skeleton-img"></div></div>
+            <div class="card-body">
+              <div class="skeleton-text"></div>
+              <div class="types"><div class="skeleton-badge"></div></div>
+            </div>`;
+          grid.appendChild(el);
+        }
+      }
+
+      function renderCard(grid, index, pokemon, jaName) {
+        const card = grid.children[index];
+        const typeBadges = pokemon.types.map(t => {
+          const name = t.type.name;
+          return `<span class="type-badge" style="background:${TYPE_COLORS[name] || "#888"}">${TYPE_JA[name] || name}</span>`;
+        }).join("");
+
+        const num = String(pokemon.id).padStart(3, "0");
+        const img = pokemon.sprites.other?.["official-artwork"]?.front_default
+                 || pokemon.sprites.front_default;
+
+        card.style.animationDelay = `${index * 0.06}s`;
+        card.innerHTML = `
+          <div class="card-img">
+            <span class="card-number">#${num}</span>
+            <img src="${img}" alt="${jaName}" loading="lazy" />
+          </div>
+          <div class="card-body">
+            <div class="card-name">${jaName}</div>
+            <div class="types">${typeBadges}</div>
+          </div>`;
+      }
+
+      async function loadPokemons() {
+        const grid = document.getElementById("grid");
+        renderSkeleton(grid);
+
+        randomIds().forEach(async (id, index) => {
+          try {
+            const [pokemon, species] = await Promise.all([
+              fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r => r.json()),
+              fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then(r => r.json()),
+            ]);
+            renderCard(grid, index, pokemon, getJaName(species) || pokemon.name);
+          } catch (e) {
+            console.error(e);
+          }
+        });
+      }
+
+      document.getElementById("reloadBtn").addEventListener("click", loadPokemons);
+      loadPokemons();
+    </script>
+  </body>
+</html>

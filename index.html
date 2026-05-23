@@ -271,6 +271,104 @@
         width: 100%;
       }
 
+      /* ポケモン占い */
+      .fortune-card { animation-delay: 0.25s; }
+
+      .fortune-btn {
+        display: block;
+        margin: 0 auto 24px;
+        background: linear-gradient(160deg, #6a9a3a, #4a7a22);
+        color: #f5f0e0;
+        border: 2px solid #3a6014;
+        border-radius: 10px;
+        padding: 12px 32px;
+        font-size: 1rem;
+        font-family: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        letter-spacing: 0.06em;
+        box-shadow: 0 3px 0 #2d4e10;
+        transition: filter 0.15s, transform 0.15s;
+      }
+
+      .fortune-btn:hover  { filter: brightness(1.1); }
+      .fortune-btn:active { box-shadow: none; transform: translateY(3px); }
+
+      .fortune-result {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        animation: fadeIn 0.5s ease both;
+      }
+
+      .fortune-result.show { display: flex; }
+
+      .fortune-pokemon-img {
+        width: 120px;
+        height: 120px;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 10px #c8a96e66);
+        animation: bobble 3s ease-in-out infinite;
+      }
+
+      .fortune-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #3d2b1f;
+        letter-spacing: 0.06em;
+        text-shadow: 0 1px 0 #fff8e8;
+      }
+
+      .fortune-number {
+        font-size: 0.78rem;
+        color: #c8a96e;
+        letter-spacing: 0.1em;
+        margin-top: -8px;
+      }
+
+      .fortune-types {
+        display: flex;
+        gap: 6px;
+      }
+
+      .fortune-type-badge {
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 999px;
+        color: white;
+        text-shadow: 0 1px 2px #0004;
+        letter-spacing: 0.04em;
+      }
+
+      .fortune-message {
+        background: #fffbf0;
+        border: 2px solid #c8a96e;
+        border-radius: 12px;
+        padding: 16px 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: #5a3a10;
+        line-height: 1.8;
+        letter-spacing: 0.03em;
+        width: 100%;
+      }
+
+      .fortune-message .fortune-star {
+        font-size: 1.1rem;
+        display: block;
+        margin-bottom: 6px;
+        color: #c8a030;
+      }
+
+      .fortune-loading {
+        text-align: center;
+        color: #9a7a50;
+        font-size: 0.95rem;
+        padding: 12px 0;
+      }
+
       /* リンク */
       .links-card { animation-delay: 0.3s; }
 
@@ -413,6 +511,22 @@
         </div>
       </div>
 
+      <!-- ポケモン占い -->
+      <div class="ghibli-card fortune-card">
+        <span class="deco deco-tl">🔮</span>
+        <span class="deco deco-br">⭐</span>
+        <p class="section-title">今日のポケモン占い</p>
+        <button class="fortune-btn" id="fortuneBtn">🌟 今日の運勢を占う</button>
+        <div id="fortuneLoading" class="fortune-loading" style="display:none">🌿 占い中…</div>
+        <div class="fortune-result" id="fortuneResult">
+          <img class="fortune-pokemon-img" id="fortuneImg" src="" alt="" />
+          <div class="fortune-number" id="fortuneNumber"></div>
+          <div class="fortune-name" id="fortuneName"></div>
+          <div class="fortune-types" id="fortuneTypes"></div>
+          <div class="fortune-message" id="fortuneMessage"></div>
+        </div>
+      </div>
+
       <!-- リンク -->
       <div class="ghibli-card links-card">
         <span class="deco deco-tl">🗺️</span>
@@ -440,6 +554,14 @@
             <div class="link-text">
               <strong>数当てゲーム</strong>
               <span>1〜20 の数を当ててみよう</span>
+            </div>
+            <span class="link-arrow">→</span>
+          </a>
+          <a href="pokemon.html" class="link-item">
+            <span class="link-icon">📖</span>
+            <div class="link-text">
+              <strong>ポケモン図鑑</strong>
+              <span>ランダムにポケモンを表示</span>
             </div>
             <span class="link-arrow">→</span>
           </a>
@@ -508,6 +630,88 @@
         document.getElementById("weather-card").innerHTML =
           `<div class="weather-error">⚠️ ${msg}</div>`;
       }
+
+      // ポケモン占い
+      const FORTUNE_TYPE_COLORS = {
+        normal: "#9fa19f", fire: "#e62829", water: "#2980ef", grass: "#3fa129",
+        electric: "#fac000", ice: "#3dcef3", fighting: "#ff8000", poison: "#9141cb",
+        ground: "#915121", flying: "#81b9ef", psychic: "#ef4179", bug: "#91a119",
+        rock: "#afa981", ghost: "#704170", dragon: "#5060e1", dark: "#624d4e",
+        steel: "#60a1b8", fairy: "#ef70ef",
+      };
+
+      const FORTUNE_TYPE_JA = {
+        normal: "ノーマル", fire: "ほのお", water: "みず", grass: "くさ",
+        electric: "でんき", ice: "こおり", fighting: "かくとう", poison: "どく",
+        ground: "じめん", flying: "ひこう", psychic: "エスパー", bug: "むし",
+        rock: "いわ", ghost: "ゴースト", dragon: "ドラゴン", dark: "あく",
+        steel: "はがね", fairy: "フェアリー",
+      };
+
+      const FORTUNE_MESSAGES = {
+        normal:   ["⭐⭐⭐", "平穏な一日になりそう。いつも通りの自分を大切に。"],
+        fire:     ["⭐⭐⭐⭐⭐", "情熱が燃えさかる日！新しいことへの挑戦が吉。"],
+        water:    ["⭐⭐⭐⭐", "流れに身を任せると、良い縁が引き寄せられるでしょう。"],
+        grass:    ["⭐⭐⭐⭐", "自然の中でのんびり過ごすと運気がアップ。"],
+        electric: ["⭐⭐⭐⭐⭐", "ひらめきの日！アイデアをどんどん形にして。"],
+        ice:      ["⭐⭐⭐", "冷静な判断が光る一日。焦らず、じっくり考えて。"],
+        fighting: ["⭐⭐⭐⭐⭐", "勝負運が高まっています。ためらわずに立ち向かおう。"],
+        poison:   ["⭐⭐", "ちょっと注意が必要な日。無理せず休むことも大事。"],
+        ground:   ["⭐⭐⭐⭐", "地に足をつけた行動が吉。着実に前に進もう。"],
+        flying:   ["⭐⭐⭐⭐⭐", "自由な発想が幸運を呼ぶ日。空を見上げてみて。"],
+        psychic:  ["⭐⭐⭐⭐⭐", "直感が冴えわたる日！第六感を信じて動こう。"],
+        bug:      ["⭐⭐⭐", "小さな積み重ねが大きな成果に。コツコツがんばろう。"],
+        rock:     ["⭐⭐⭐⭐", "揺るぎない意志が周りを動かす。信念を持って。"],
+        ghost:    ["⭐⭐⭐", "神秘的な出会いがあるかも。不思議な縁を大切に。"],
+        dragon:   ["⭐⭐⭐⭐⭐", "大きな夢に向かって走れる日。思い切り羽ばたこう！"],
+        dark:     ["⭐⭐", "油断は禁物。慎重な行動が大切な日です。"],
+        steel:    ["⭐⭐⭐⭐", "どんな困難も乗り越えられる力があります。"],
+        fairy:    ["⭐⭐⭐⭐⭐", "素敵な出会いや再会の予感。笑顔でいると幸運が来る。"],
+      };
+
+      document.getElementById("fortuneBtn").addEventListener("click", async () => {
+        const btn     = document.getElementById("fortuneBtn");
+        const loading = document.getElementById("fortuneLoading");
+        const result  = document.getElementById("fortuneResult");
+
+        btn.disabled = true;
+        loading.style.display = "block";
+        result.classList.remove("show");
+
+        try {
+          const id = Math.floor(Math.random() * 898) + 1;
+          const [pokemon, species] = await Promise.all([
+            fetch(`https://pokeapi.co/api/v2/pokemon/${id}`).then(r => r.json()),
+            fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`).then(r => r.json()),
+          ]);
+
+          const jaEntry = species.names.find(n => n.language.name === "ja")
+                       || species.names.find(n => n.language.name === "ja-Hrkt");
+          const jaName = jaEntry ? jaEntry.name : pokemon.name;
+          const img = pokemon.sprites.other?.["official-artwork"]?.front_default
+                   || pokemon.sprites.front_default;
+          const mainType = pokemon.types[0].type.name;
+          const [stars, msg] = FORTUNE_MESSAGES[mainType] || ["⭐⭐⭐", "今日も良い一日を。"];
+
+          document.getElementById("fortuneImg").src    = img;
+          document.getElementById("fortuneImg").alt    = jaName;
+          document.getElementById("fortuneNumber").textContent = `#${String(id).padStart(3, "0")}`;
+          document.getElementById("fortuneName").textContent   = jaName;
+          document.getElementById("fortuneTypes").innerHTML    = pokemon.types.map(t => {
+            const n = t.type.name;
+            return `<span class="fortune-type-badge" style="background:${FORTUNE_TYPE_COLORS[n] || "#888"}">${FORTUNE_TYPE_JA[n] || n}</span>`;
+          }).join("");
+          document.getElementById("fortuneMessage").innerHTML =
+            `<span class="fortune-star">${stars}</span>${msg}`;
+
+          loading.style.display = "none";
+          result.classList.add("show");
+        } catch {
+          loading.textContent = "⚠️ 占いに失敗しました";
+        } finally {
+          btn.disabled = false;
+        }
+      });
 
       navigator.geolocation.getCurrentPosition(
         async ({ coords }) => {
