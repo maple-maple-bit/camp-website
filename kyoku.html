@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <title>歴代曲一覧 — 乃木坂46</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&display=swap');
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      :root {
+        --pink:      #b09ad8;
+        --pink-deep: #7050a8;
+        --rose:      #d8cef0;
+        --cream:     #f8f6ff;
+        --text:      #2e2050;
+        --text-mid:  #7060a0;
+        --text-pale: #b0a0cc;
+      }
+
+      body {
+        font-family: 'Shippori Mincho', "Hiragino Mincho ProN", "Yu Mincho", serif;
+        min-height: 100vh;
+        background: linear-gradient(160deg, #ede8f8 0%, #f0ecff 40%, #e8e4f8 70%, #ece8ff 100%);
+        overflow-x: hidden;
+        color: var(--text);
+      }
+
+      body::before {
+        content: "";
+        position: fixed; inset: 0;
+        background-image:
+          radial-gradient(circle at 15% 20%, #c8b8e888 0%, transparent 40%),
+          radial-gradient(circle at 85% 70%, #b8c8e888 0%, transparent 40%),
+          radial-gradient(circle at 50% 50%, #d8d0f044 0%, transparent 60%);
+        pointer-events: none; z-index: 0;
+      }
+
+      .petals { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+      .petal {
+        position: absolute; top: -30px; font-size: 1.1rem; opacity: 0.55;
+        animation: petalFall linear infinite;
+      }
+      @keyframes petalFall {
+        0%   { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.6; }
+        50%  { transform: translateY(50vh) rotate(180deg) translateX(20px); }
+        100% { transform: translateY(105vh) rotate(360deg) translateX(-10px); opacity: 0; }
+      }
+
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      .page {
+        position: relative; z-index: 10;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+        display: flex; flex-direction: column; gap: 20px;
+      }
+
+      /* ヘッダー */
+      .header-card {
+        background: linear-gradient(160deg, #f8f6ff, #f0ecff);
+        border: 2px solid var(--pink);
+        border-radius: 24px;
+        padding: 28px 32px 22px;
+        box-shadow: 0 8px 40px #b09ad828, 0 0 0 6px #ede8f8;
+        text-align: center;
+        animation: fadeUp 0.7s ease both;
+        position: relative; overflow: hidden;
+      }
+      .header-card::before {
+        content: "❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧";
+        position: absolute; top: 8px; left: 0; right: 0;
+        font-size: 0.7rem; color: var(--pink); opacity: 0.6;
+        letter-spacing: 0.1em; text-align: center; overflow: hidden;
+      }
+      .header-card::after {
+        content: "❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧";
+        position: absolute; bottom: 8px; left: 0; right: 0;
+        font-size: 0.7rem; color: var(--pink); opacity: 0.4;
+        letter-spacing: 0.1em; text-align: center; overflow: hidden;
+      }
+      .header-nav {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .back-link {
+        font-size: 0.8rem; color: var(--text-mid); text-decoration: none;
+        transition: color 0.2s; letter-spacing: 0.06em;
+      }
+      .back-link:hover { color: var(--pink-deep); }
+      .header-title {
+        font-size: clamp(1.3rem, 4vw, 1.9rem); font-weight: 700;
+        color: var(--pink-deep); letter-spacing: 0.18em; margin-bottom: 6px;
+        text-shadow: 0 2px 8px #b09ad840;
+      }
+      .header-sub { font-size: 0.78rem; color: var(--text-pale); letter-spacing: 0.2em; }
+
+      /* コントロール */
+      .controls {
+        background: linear-gradient(160deg, #fff8fc, #fdeef8);
+        border: 2px solid var(--rose);
+        border-radius: 20px;
+        padding: 18px 22px;
+        box-shadow: 0 4px 24px #b09ad820, 0 0 0 4px #fce8f088;
+        animation: fadeUp 0.5s ease both 0.08s;
+        display: flex; flex-direction: column; gap: 12px;
+        position: relative; overflow: hidden;
+      }
+      .controls::before {
+        content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, var(--rose), var(--pink), var(--rose));
+        border-radius: 20px 20px 0 0;
+      }
+
+      .search-wrap { position: relative; }
+      .search-wrap::before {
+        content: "✦"; position: absolute; left: 14px; top: 50%;
+        transform: translateY(-50%); color: var(--pink); font-size: 0.85rem;
+        pointer-events: none;
+      }
+      .search-box {
+        width: 100%; background: var(--cream);
+        border: 2px solid var(--rose); border-radius: 999px;
+        padding: 10px 18px 10px 36px;
+        font-size: 0.92rem; font-family: inherit; color: var(--text);
+        outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      .search-box:focus { border-color: var(--pink); box-shadow: 0 0 0 4px #b09ad828; }
+      .search-box::placeholder { color: var(--text-pale); }
+
+      .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+      .filter-btn {
+        font-family: inherit; font-size: 0.76rem; font-weight: 700;
+        padding: 5px 14px; border-radius: 999px;
+        border: 2px solid var(--pink); color: var(--pink-deep);
+        background: transparent; cursor: pointer; letter-spacing: 0.08em;
+        transition: background 0.2s, color 0.2s, transform 0.15s;
+      }
+      .filter-btn:hover { background: #f0e8ff; }
+      .filter-btn:active { transform: scale(0.95); }
+      .filter-btn.active {
+        background: linear-gradient(135deg, #b09ad8, #7050a8);
+        border-color: transparent; color: white;
+        box-shadow: 0 3px 12px #7050a844;
+      }
+
+      .count-line {
+        font-size: 0.78rem; color: var(--text-pale);
+        letter-spacing: 0.1em; text-align: right;
+      }
+      .count-line span { color: var(--pink-deep); font-weight: 700; }
+
+      /* 年グループ */
+      .year-group { animation: fadeUp 0.4s ease both; }
+
+      .year-heading {
+        display: flex; align-items: center; gap: 10px;
+        margin-bottom: 10px;
+      }
+      .year-label {
+        font-size: 1rem; font-weight: 700; color: var(--pink-deep);
+        letter-spacing: 0.14em; white-space: nowrap;
+      }
+      .year-line {
+        flex: 1; height: 1px;
+        background: linear-gradient(90deg, var(--rose), transparent);
+      }
+      .year-count {
+        font-size: 0.7rem; color: var(--text-pale);
+        letter-spacing: 0.08em; white-space: nowrap;
+      }
+
+      /* 曲カード */
+      .song-list { display: flex; flex-direction: column; gap: 8px; }
+
+      .song-card {
+        background: linear-gradient(160deg, #fff8fc, #fdeef8);
+        border: 2px solid var(--rose);
+        border-radius: 14px;
+        padding: 12px 16px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 2px 12px #b09ad814;
+        transition: transform 0.18s, box-shadow 0.18s;
+        position: relative; overflow: hidden;
+      }
+      .song-card::before {
+        content: "";
+        position: absolute; top: 0; left: 0; bottom: 0; width: 4px;
+      }
+      .song-card:hover {
+        transform: translateX(4px);
+        box-shadow: 0 4px 20px #b09ad828;
+      }
+
+      .song-card.type-single::before  { background: linear-gradient(180deg, #b09ad8, #7050a8); }
+      .song-card.type-album::before   { background: linear-gradient(180deg, #d4a060, #a07030); }
+      .song-card.type-best::before    { background: linear-gradient(180deg, #e87898, #c84870); }
+      .song-card.type-digital::before { background: linear-gradient(180deg, #60b8c8, #3888a0); }
+
+      .cd-badge {
+        font-size: 0.62rem; font-weight: 700;
+        padding: 3px 9px; border-radius: 999px; color: white;
+        white-space: nowrap; letter-spacing: 0.06em;
+        box-shadow: 0 2px 6px #0002;
+        align-self: flex-start;
+      }
+      .badge-single  { background: linear-gradient(135deg, #b09ad8, #7050a8); }
+      .badge-album   { background: linear-gradient(135deg, #d4a060, #a07030); }
+      .badge-best    { background: linear-gradient(135deg, #e87898, #c84870); }
+      .badge-digital { background: linear-gradient(135deg, #60b8c8, #3888a0); }
+
+      .song-main { min-width: 0; }
+      .song-cd-label {
+        font-size: 0.64rem; color: var(--text-pale);
+        letter-spacing: 0.08em; margin-bottom: 2px;
+      }
+      .song-title {
+        font-size: 0.98rem; font-weight: 700; color: var(--text);
+        letter-spacing: 0.04em; line-height: 1.4;
+      }
+      .song-center {
+        font-size: 0.72rem; color: var(--text-mid);
+        letter-spacing: 0.04em; margin-top: 3px;
+      }
+      .song-center::before { content: "センター："; color: var(--text-pale); font-size: 0.64rem; }
+
+      .song-date {
+        font-size: 0.72rem; color: var(--text-pale);
+        white-space: nowrap; letter-spacing: 0.04em; text-align: right;
+        align-self: flex-start;
+      }
+
+      .empty-msg {
+        text-align: center; color: var(--text-pale);
+        font-size: 0.95rem; padding: 48px 0; letter-spacing: 0.1em;
+      }
+
+      footer {
+        position: relative; z-index: 10; text-align: center;
+        padding: 10px 24px 36px; font-size: 0.75rem;
+        color: var(--text-pale); letter-spacing: 0.12em;
+      }
+      footer::before {
+        content: "✿ ✦ ✿ ✦ ✿"; display: block; margin-bottom: 8px;
+        font-size: 0.7rem; color: var(--pink); opacity: 0.5; letter-spacing: 0.3em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="petals" id="petals"></div>
+
+    <div class="page">
+      <div class="header-card">
+        <div class="header-nav">
+          <a href="noigizakaindex.html" class="back-link">← おもどり</a>
+          <span style="font-size:0.75rem;color:var(--text-pale);letter-spacing:0.1em">Nogizaka46</span>
+        </div>
+        <div class="header-title">🎵 歴代曲一覧 🎵</div>
+        <div class="header-sub">Discography 2012 – 2026</div>
+      </div>
+
+      <div class="controls">
+        <div class="search-wrap">
+          <input type="search" class="search-box" id="searchBox" placeholder="曲名・センター・CD名で検索…" />
+        </div>
+        <div class="filter-row">
+          <button class="filter-btn active" data-type="all">すべて</button>
+          <button class="filter-btn" data-type="single">シングル</button>
+          <button class="filter-btn" data-type="album">アルバム</button>
+          <button class="filter-btn" data-type="best">ベスト</button>
+          <button class="filter-btn" data-type="digital">配信</button>
+        </div>
+        <div class="count-line">表示中：<span id="countNum">0</span> 曲</div>
+      </div>
+
+      <div id="listArea"></div>
+    </div>
+
+    <footer>© 2026 Example Website ✦ ※ 情報は変更される場合がございます</footer>
+
+    <script>
+      const petalEmojis = ["🌸","🌷","✿","❀","🌺"];
+      const petalsEl = document.getElementById("petals");
+      for (let i = 0; i < 18; i++) {
+        const p = document.createElement("div");
+        p.className = "petal";
+        p.textContent = petalEmojis[i % petalEmojis.length];
+        p.style.left = (Math.random() * 100) + "%";
+        p.style.animationDuration = (8 + Math.random() * 12) + "s";
+        p.style.animationDelay = (Math.random() * 12) + "s";
+        p.style.fontSize = (0.8 + Math.random() * 0.8) + "rem";
+        petalsEl.appendChild(p);
+      }
+
+      const BADGE_LABEL = {
+        single: "シングル", album: "アルバム", best: "ベスト", digital: "配信",
+      };
+
+      const SONGS = [
+        { type:"single",  cd:"1stシングル",                          title:"ぐるぐるカーテン",                     center:"生駒里奈",             date:"2012/02/22" },
+        { type:"single",  cd:"2ndシングル",                          title:"おいでシャンプー",                     center:"生駒里奈",             date:"2012/05/02" },
+        { type:"single",  cd:"3rdシングル",                          title:"走れ!Bicycle",                         center:"生駒里奈",             date:"2012/08/22" },
+        { type:"single",  cd:"4thシングル",                          title:"制服のマネキン",                       center:"生駒里奈",             date:"2012/12/19" },
+        { type:"single",  cd:"5thシングル",                          title:"君の名は希望",                         center:"生駒里奈",             date:"2013/03/13" },
+        { type:"single",  cd:"6thシングル",                          title:"ガールズルール",                       center:"白石麻衣",             date:"2013/07/03" },
+        { type:"single",  cd:"7thシングル",                          title:"バレッタ",                             center:"堀未央奈",             date:"2013/11/27" },
+        { type:"single",  cd:"8thシングル",                          title:"気づいたら片想い",                     center:"西野七瀬",             date:"2014/04/02" },
+        { type:"single",  cd:"9thシングル",                          title:"夏のFree&Easy",                        center:"西野七瀬",             date:"2014/07/09" },
+        { type:"single",  cd:"10thシングル",                         title:"何度目の青空か?",                      center:"生田絵梨花",           date:"2014/10/08" },
+        { type:"album",   cd:"1stアルバム『透明な色』",               title:"僕がいる場所",                         center:"生田絵梨花",           date:"2015/01/07" },
+        { type:"single",  cd:"11thシングル",                         title:"命は美しい",                           center:"西野七瀬",             date:"2015/03/18" },
+        { type:"single",  cd:"12thシングル",                         title:"太陽ノック",                           center:"生駒里奈",             date:"2015/07/22" },
+        { type:"single",  cd:"13thシングル",                         title:"今、話したい誰かがいる",               center:"白石麻衣・西野七瀬",   date:"2015/10/28" },
+        { type:"single",  cd:"14thシングル",                         title:"ハルジオンが咲く頃",                   center:"深川麻衣",             date:"2016/03/23" },
+        { type:"album",   cd:"2ndアルバム『それぞれの椅子』",         title:"きっかけ",                             center:"白石麻衣・西野七瀬",   date:"2016/05/25" },
+        { type:"single",  cd:"15thシングル",                         title:"裸足でSummer",                         center:"齋藤飛鳥",             date:"2016/07/27" },
+        { type:"single",  cd:"16thシングル",                         title:"サヨナラの意味",                       center:"橋本奈々未",           date:"2016/11/09" },
+        { type:"single",  cd:"17thシングル",                         title:"インフルエンサー",                     center:"白石麻衣・西野七瀬",   date:"2017/03/22" },
+        { type:"album",   cd:"3rdアルバム『生まれてから初めて見た夢』",title:"スカイダイビング",                     center:"白石麻衣・西野七瀬",   date:"2017/05/24" },
+        { type:"single",  cd:"18thシングル",                         title:"逃げ水",                               center:"大園桃子・与田祐希",   date:"2017/08/09" },
+        { type:"single",  cd:"19thシングル",                         title:"いつかできるから今日できる",           center:"齋藤飛鳥・西野七瀬",   date:"2017/10/11" },
+        { type:"single",  cd:"20thシングル",                         title:"シンクロニシティ",                     center:"白石麻衣",             date:"2018/04/25" },
+        { type:"single",  cd:"21stシングル",                         title:"ジコチューで行こう!",                  center:"齋藤飛鳥",             date:"2018/08/08" },
+        { type:"single",  cd:"22ndシングル",                         title:"帰り道は遠回りしたくなる",             center:"西野七瀬",             date:"2018/11/14" },
+        { type:"album",   cd:"4thアルバム『今が思い出になるまで』",   title:"ありがちな恋愛",                       center:"白石麻衣・齋藤飛鳥",   date:"2019/04/17" },
+        { type:"single",  cd:"23rdシングル",                         title:"Sing Out!",                            center:"齋藤飛鳥",             date:"2019/05/29" },
+        { type:"single",  cd:"24thシングル",                         title:"夜明けまで強がらなくてもいい",         center:"遠藤さくら",           date:"2019/09/04" },
+        { type:"single",  cd:"25thシングル",                         title:"しあわせの保護色",                     center:"白石麻衣",             date:"2020/03/25" },
+        { type:"digital", cd:"配信シングル",                         title:"Route 246",                            center:"齋藤飛鳥",             date:"2020/06/17" },
+        { type:"single",  cd:"26thシングル",                         title:"僕は僕を好きになる",                   center:"山下美月",             date:"2021/01/27" },
+        { type:"single",  cd:"27thシングル",                         title:"ごめんねFingers crossed",              center:"遠藤さくら",           date:"2021/06/09" },
+        { type:"single",  cd:"28thシングル",                         title:"君に叱られた",                         center:"賀喜遥香",             date:"2021/09/22" },
+        { type:"best",    cd:"ベストアルバム『Time flies』",          title:"最後のTight Hug",                      center:"生田絵梨花",           date:"2021/12/15" },
+        { type:"single",  cd:"29thシングル",                         title:"Actually…",                            center:"中西アルノ",           date:"2022/03/23" },
+        { type:"single",  cd:"30thシングル",                         title:"好きというのはロックだぜ!",            center:"賀喜遥香",             date:"2022/08/31" },
+        { type:"single",  cd:"31stシングル",                         title:"ここにはないもの",                     center:"齋藤飛鳥",             date:"2022/12/07" },
+        { type:"single",  cd:"32ndシングル",                         title:"人は夢を二度見る",                     center:"久保史緒里・山下美月", date:"2023/03/29" },
+        { type:"single",  cd:"33rdシングル",                         title:"おひとりさま天国",                     center:"井上和",               date:"2023/08/23" },
+        { type:"single",  cd:"34thシングル",                         title:"Monopoly",                             center:"遠藤さくら・賀喜遥香", date:"2023/12/06" },
+        { type:"single",  cd:"35thシングル",                         title:"チャンスは平等",                       center:"山下美月",             date:"2024/04/10" },
+        { type:"single",  cd:"36thシングル",                         title:"チートデイ",                           center:"井上和",               date:"2024/08/21" },
+        { type:"single",  cd:"37thシングル",                         title:"歩道橋",                               center:"遠藤さくら",           date:"2024/12/11" },
+        { type:"digital", cd:"配信シングル",                         title:"懐かしさの先",                         center:"与田祐希",             date:"2025/02/03" },
+        { type:"single",  cd:"38thシングル",                         title:"ネーブルオレンジ",                     center:"井上和・中西アルノ",   date:"2025/03/26" },
+        { type:"single",  cd:"39thシングル",                         title:"Same numbers",                         center:"賀喜遥香",             date:"2025/07/30" },
+        { type:"single",  cd:"40thシングル",                         title:"ビリヤニ",                             center:"瀬戸口心月・矢田萌華", date:"2025/11/26" },
+        { type:"album",   cd:"5thアルバム『My respect』",            title:"My respect",                           center:"梅澤美波",             date:"2026/01/14" },
+        { type:"single",  cd:"41stシングル",                         title:"最後に階段を駆け上がったのはいつだ？", center:"池田瑛紗",             date:"2026/04/08" },
+      ];
+
+      function fmtDate(d) {
+        const [y, m, dd] = d.split("/");
+        return `${y}年${Number(m)}月${Number(dd)}日`;
+      }
+
+      let activeType = "all";
+      let searchQ = "";
+
+      function filtered() {
+        return SONGS.filter(s => {
+          const typeOk = activeType === "all" || s.type === activeType;
+          const q = searchQ.trim();
+          const textOk = !q || s.title.includes(q) || s.center.includes(q) || s.cd.includes(q);
+          return typeOk && textOk;
+        });
+      }
+
+      function render() {
+        const list = filtered();
+        document.getElementById("countNum").textContent = list.length;
+        const area = document.getElementById("listArea");
+        area.innerHTML = "";
+
+        if (list.length === 0) {
+          area.innerHTML = `<div class="empty-msg">🌸 該当する曲が見つかりませんでした</div>`;
+          return;
+        }
+
+        // 年ごとにグループ化
+        const byYear = {};
+        list.forEach(s => {
+          const y = s.date.split("/")[0];
+          if (!byYear[y]) byYear[y] = [];
+          byYear[y].push(s);
+        });
+
+        Object.keys(byYear).sort().forEach((year, gi) => {
+          const group = document.createElement("div");
+          group.className = "year-group";
+          group.style.animationDelay = `${gi * 0.06}s`;
+
+          const heading = document.createElement("div");
+          heading.className = "year-heading";
+          heading.innerHTML = `
+            <span class="year-label">✿ ${year}年</span>
+            <div class="year-line"></div>
+            <span class="year-count">${byYear[year].length}曲</span>`;
+          group.appendChild(heading);
+
+          const songList = document.createElement("div");
+          songList.className = "song-list";
+
+          byYear[year].forEach(s => {
+            const badgeClass =
+              s.type === "single"  ? "badge-single"  :
+              s.type === "album"   ? "badge-album"   :
+              s.type === "best"    ? "badge-best"    :
+                                     "badge-digital";
+            const card = document.createElement("div");
+            card.className = `song-card type-${s.type}`;
+            card.innerHTML = `
+              <span class="cd-badge ${badgeClass}">${BADGE_LABEL[s.type]}</span>
+              <div class="song-main">
+                <div class="song-cd-label">${s.cd}</div>
+                <div class="song-title">${s.title}</div>
+                <div class="song-center">${s.center}</div>
+              </div>
+              <div class="song-date">${fmtDate(s.date)}</div>`;
+            songList.appendChild(card);
+          });
+
+          group.appendChild(songList);
+          area.appendChild(group);
+        });
+      }
+
+      document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeType = btn.dataset.type;
+          render();
+        });
+      });
+
+      document.getElementById("searchBox").addEventListener("input", e => {
+        searchQ = e.target.value;
+        render();
+      });
+
+      render();
+    </script>
+  </body>
+</html>
