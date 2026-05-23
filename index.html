@@ -3,23 +3,403 @@
   <head>
     <title>Example Website</title>
     <meta charset="UTF-8" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-    />
-    <style></style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif;
+        background: #0f0f1a;
+        color: #e0e0f0;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* Animated background */
+      body::before {
+        content: "";
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(ellipse at 20% 50%, #1a0a3e 0%, transparent 50%),
+                    radial-gradient(ellipse at 80% 20%, #0a1a3e 0%, transparent 50%),
+                    radial-gradient(ellipse at 50% 80%, #0a2a1a 0%, transparent 50%);
+        z-index: -1;
+        animation: bgShift 12s ease-in-out infinite alternate;
+      }
+
+      @keyframes bgShift {
+        0%   { transform: translate(0, 0) rotate(0deg); }
+        100% { transform: translate(2%, 2%) rotate(1deg); }
+      }
+
+      /* Hero */
+      .hero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 100px 24px 60px;
+        position: relative;
+      }
+
+      .hero-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #6c63ff33, #00d4aa33);
+        border: 1px solid #6c63ff55;
+        border-radius: 999px;
+        padding: 6px 18px;
+        font-size: 0.78rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #a89fff;
+        margin-bottom: 24px;
+      }
+
+      .hero h1 {
+        font-size: clamp(2.5rem, 7vw, 5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        background: linear-gradient(135deg, #ffffff 0%, #a89fff 50%, #00d4aa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 20px;
+        animation: fadeUp 0.8s ease both;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        color: #9090b0;
+        max-width: 480px;
+        line-height: 1.7;
+        animation: fadeUp 0.8s 0.15s ease both;
+        margin-bottom: 48px;
+      }
+
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Mascot */
+      .mascot-wrapper {
+        animation: fadeUp 0.8s 0.3s ease both;
+        margin-bottom: 64px;
+      }
+
+      .mascot-wrapper img {
+        width: 140px;
+        height: 140px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 32px #6c63ff88);
+        animation: float 4s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50%       { transform: translateY(-14px); }
+      }
+
+      /* Links section */
+      .links-section {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 24px 80px;
+        animation: fadeUp 0.8s 0.45s ease both;
+      }
+
+      .links-section h2 {
+        text-align: center;
+        font-size: 0.85rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #6060a0;
+        margin-bottom: 24px;
+      }
+
+      .link-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+      }
+
+      .link-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: #ffffff08;
+        border: 1px solid #ffffff12;
+        border-radius: 16px;
+        padding: 20px 24px;
+        text-decoration: none;
+        color: #e0e0f0;
+        transition: background 0.25s, border-color 0.25s, transform 0.25s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .link-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #6c63ff22, transparent);
+        opacity: 0;
+        transition: opacity 0.25s;
+      }
+
+      .link-card:hover {
+        background: #ffffff12;
+        border-color: #6c63ff66;
+        transform: translateY(-3px);
+      }
+
+      .link-card:hover::before {
+        opacity: 1;
+      }
+
+      .link-icon {
+        font-size: 1.8rem;
+        flex-shrink: 0;
+      }
+
+      .link-text strong {
+        display: block;
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .link-text span {
+        font-size: 0.82rem;
+        color: #7070a0;
+      }
+
+      .link-arrow {
+        margin-left: auto;
+        color: #4040a0;
+        font-size: 1.1rem;
+        transition: transform 0.25s, color 0.25s;
+      }
+
+      .link-card:hover .link-arrow {
+        transform: translateX(4px);
+        color: #a89fff;
+      }
+
+      /* Weather */
+      .weather-section {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 0 24px 48px;
+        animation: fadeUp 0.8s 0.35s ease both;
+      }
+
+      .weather-section h2 {
+        text-align: center;
+        font-size: 0.85rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #6060a0;
+        margin-bottom: 24px;
+      }
+
+      .weather-card {
+        background: #ffffff08;
+        border: 1px solid #ffffff12;
+        border-radius: 20px;
+        padding: 28px 32px;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .weather-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, #00d4aa15, #6c63ff10);
+        pointer-events: none;
+      }
+
+      .weather-icon {
+        font-size: 4rem;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+
+      .weather-info {
+        flex: 1;
+      }
+
+      .weather-temp {
+        font-size: 2.8rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #ffffff, #00d4aa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+        margin-bottom: 4px;
+      }
+
+      .weather-desc {
+        font-size: 1rem;
+        color: #9090b0;
+        margin-bottom: 6px;
+      }
+
+      .weather-location {
+        font-size: 0.82rem;
+        color: #5050a0;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .weather-loading {
+        color: #5050a0;
+        font-size: 0.95rem;
+        text-align: center;
+        width: 100%;
+        padding: 8px 0;
+      }
+
+      .weather-error {
+        color: #a06060;
+        font-size: 0.9rem;
+        text-align: center;
+        width: 100%;
+      }
+
+      /* Footer */
+      footer {
+        text-align: center;
+        padding: 24px;
+        font-size: 0.78rem;
+        color: #3a3a5c;
+        border-top: 1px solid #ffffff08;
+      }
+    </style>
   </head>
   <body>
-    <main class="container">
-      <h1>Example Website</h1>
-      <p>これはウェブサイトです。</p>
+    <main>
+      <section class="hero">
+        <div class="hero-badge">✦ Welcome</div>
+        <h1>Example Website</h1>
+        <p>これはウェブサイトです。<br>いろんなサイトへ飛び立とう。</p>
+        <div class="mascot-wrapper">
+          <img src="computer01_smile.png" alt="笑顔のコンピューター" />
+        </div>
+      </section>
 
-      <ul>
-        <li><a href="https://www.google.com/">Google</a></li>
-        <li><a href="https://www.yahoo.co.jp/">Yahoo! JAPAN</a></li>
-      </ul>
+      <section class="weather-section">
+        <h2>Today's Weather</h2>
+        <div class="weather-card" id="weather-card">
+          <div class="weather-loading" id="weather-loading">📡 現在地の天気を取得中…</div>
+        </div>
+      </section>
 
-      <img src="computer01_smile.png" alt="笑顔のコンピューター" />
+      <section class="links-section">
+        <h2>Links</h2>
+        <div class="link-cards">
+          <a href="https://www.google.com/" class="link-card">
+            <span class="link-icon">🔍</span>
+            <div class="link-text">
+              <strong>Google</strong>
+              <span>世界最大の検索エンジン</span>
+            </div>
+            <span class="link-arrow">→</span>
+          </a>
+          <a href="https://www.yahoo.co.jp/" class="link-card">
+            <span class="link-icon">📰</span>
+            <div class="link-text">
+              <strong>Yahoo! JAPAN</strong>
+              <span>ニュース・検索・ショッピング</span>
+            </div>
+            <span class="link-arrow">→</span>
+          </a>
+        </div>
+      </section>
     </main>
+
+    <footer>© 2026 Example Website</footer>
+
+    <script>
+      const WMO_CODES = {
+        0: ["☀️", "快晴"],
+        1: ["🌤️", "ほぼ晴れ"], 2: ["⛅", "一部曇り"], 3: ["☁️", "曇り"],
+        45: ["🌫️", "霧"], 48: ["🌫️", "霧（着氷）"],
+        51: ["🌦️", "霧雨（弱）"], 53: ["🌦️", "霧雨"], 55: ["🌧️", "霧雨（強）"],
+        61: ["🌧️", "小雨"], 63: ["🌧️", "雨"], 65: ["🌧️", "大雨"],
+        71: ["🌨️", "小雪"], 73: ["❄️", "雪"], 75: ["❄️", "大雪"],
+        80: ["🌦️", "にわか雨（弱）"], 81: ["🌧️", "にわか雨"], 82: ["⛈️", "激しいにわか雨"],
+        95: ["⛈️", "雷雨"], 96: ["⛈️", "雷雨（ひょう）"], 99: ["⛈️", "激しい雷雨"],
+      };
+
+      async function fetchWeather(lat, lon) {
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode,windspeed_10m&timezone=auto`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("API error");
+        return res.json();
+      }
+
+      async function reverseGeocode(lat, lon) {
+        const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=ja`;
+        const res = await fetch(url);
+        if (!res.ok) return null;
+        const data = await res.json();
+        const addr = data.address || {};
+        return addr.city || addr.town || addr.village || addr.county || addr.state || null;
+      }
+
+      function renderWeather(data, cityName) {
+        const cur = data.current;
+        const code = cur.weathercode;
+        const [icon, desc] = WMO_CODES[code] ?? ["🌡️", "不明"];
+        const temp = Math.round(cur.temperature_2m);
+        const wind = Math.round(cur.windspeed_10m);
+        const location = cityName ? `📍 ${cityName}` : "📍 現在地";
+
+        document.getElementById("weather-card").innerHTML = `
+          <div class="weather-icon">${icon}</div>
+          <div class="weather-info">
+            <div class="weather-temp">${temp}°C</div>
+            <div class="weather-desc">${desc}</div>
+            <div class="weather-location">${location} ・ 風速 ${wind} km/h</div>
+          </div>
+        `;
+      }
+
+      function showError(msg) {
+        document.getElementById("weather-card").innerHTML =
+          `<div class="weather-error">⚠️ ${msg}</div>`;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async ({ coords }) => {
+          try {
+            const [data, city] = await Promise.all([
+              fetchWeather(coords.latitude, coords.longitude),
+              reverseGeocode(coords.latitude, coords.longitude),
+            ]);
+            renderWeather(data, city);
+          } catch {
+            showError("天気データの取得に失敗しました");
+          }
+        },
+        () => showError("位置情報の取得が拒否されました"),
+        { timeout: 8000 }
+      );
+    </script>
   </body>
 </html>
