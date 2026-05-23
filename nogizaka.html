@@ -1,0 +1,1133 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <title>乃木坂メンバー図鑑</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --pink: #b09ad8;
+        --pink-deep: #7050a8;
+        --pink-pale: #ede8f8;
+        --rose: #d8cef0;
+        --cream: #f8f6ff;
+        --gold: #d4a060;
+        --gold-pale: #f5e8d8;
+        --text: #2e2050;
+        --text-mid: #7060a0;
+        --text-pale: #b0a0cc;
+      }
+
+      body {
+        font-family:
+          "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          160deg,
+          #ede8f8 0%,
+          #f0ecff 40%,
+          #e8e4f8 70%,
+          #ece8ff 100%
+        );
+        overflow-x: hidden;
+        color: var(--text);
+      }
+
+      /* ===== 背景装飾 ===== */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          radial-gradient(circle at 15% 20%, #c8b8e888 0%, transparent 40%),
+          radial-gradient(circle at 85% 70%, #b8c8e888 0%, transparent 40%),
+          radial-gradient(circle at 50% 50%, #d8d0f044 0%, transparent 60%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ===== 花びら ===== */
+      .petals {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+      }
+      .petal {
+        position: absolute;
+        top: -30px;
+        font-size: 1.1rem;
+        opacity: 0.55;
+        animation: petalFall linear infinite;
+      }
+      @keyframes petalFall {
+        0% {
+          transform: translateY(0) rotate(0deg) translateX(0);
+          opacity: 0.6;
+        }
+        50% {
+          transform: translateY(50vh) rotate(180deg) translateX(20px);
+        }
+        100% {
+          transform: translateY(105vh) rotate(360deg) translateX(-10px);
+          opacity: 0;
+        }
+      }
+
+      /* ===== ページ ===== */
+      .page {
+        position: relative;
+        z-index: 10;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ===== ヘッダー ===== */
+      .header-card {
+        background: linear-gradient(160deg, #f8f6ff, #f0ecff);
+        border: 2px solid var(--pink);
+        border-radius: 24px;
+        padding: 28px 32px 24px;
+        margin-bottom: 28px;
+        box-shadow:
+          0 8px 40px #b09ad828,
+          0 0 0 6px #ede8f8;
+        position: relative;
+        animation: fadeUp 0.7s ease both;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      /* レース風上下ライン */
+      .header-card::before {
+        content: "❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧";
+        position: absolute;
+        top: 8px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        color: var(--pink);
+        opacity: 0.6;
+        letter-spacing: 0.1em;
+        overflow: hidden;
+      }
+
+      .header-card::after {
+        content: "❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧";
+        position: absolute;
+        bottom: 64px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        color: var(--pink);
+        opacity: 0.4;
+        letter-spacing: 0.1em;
+        overflow: hidden;
+      }
+
+      .header-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+
+      .back-link {
+        font-size: 0.8rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        transition: color 0.2s;
+        letter-spacing: 0.06em;
+      }
+      .back-link:hover {
+        color: var(--pink-deep);
+      }
+
+      .member-count {
+        font-size: 0.8rem;
+        color: var(--text-pale);
+        letter-spacing: 0.06em;
+      }
+
+      .header-title {
+        font-size: clamp(1.3rem, 4vw, 1.9rem);
+        font-weight: 700;
+        color: var(--pink-deep);
+        letter-spacing: 0.18em;
+        margin-bottom: 6px;
+        text-shadow: 0 2px 8px #e8a0b440;
+      }
+
+      .header-sub {
+        font-size: 0.78rem;
+        color: var(--text-pale);
+        letter-spacing: 0.22em;
+        margin-bottom: 20px;
+      }
+
+      /* 検索 */
+      .search-wrap {
+        position: relative;
+        margin-bottom: 14px;
+      }
+      .search-wrap::before {
+        content: "✦";
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--pink);
+        font-size: 0.9rem;
+        pointer-events: none;
+      }
+      .search-box {
+        width: 100%;
+        background: var(--cream);
+        border: 2px solid var(--rose);
+        border-radius: 999px;
+        padding: 10px 18px 10px 36px;
+        font-size: 0.92rem;
+        font-family: inherit;
+        color: var(--text);
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .search-box:focus {
+        border-color: var(--pink);
+        box-shadow: 0 0 0 4px #e8a0b428;
+      }
+      .search-box::placeholder {
+        color: var(--text-pale);
+      }
+
+      /* 世代フィルター */
+      .gen-filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .gen-btn {
+        font-family: inherit;
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 6px 18px;
+        border-radius: 999px;
+        border: 2px solid var(--pink);
+        color: var(--pink-deep);
+        background: transparent;
+        cursor: pointer;
+        letter-spacing: 0.08em;
+        transition:
+          background 0.2s,
+          color 0.2s,
+          box-shadow 0.2s,
+          transform 0.15s;
+      }
+      .gen-btn:hover {
+        background: #fce8f0;
+      }
+      .gen-btn:active {
+        transform: scale(0.95);
+      }
+      .gen-btn.active {
+        background: linear-gradient(135deg, #e8a0b4, #c8607a);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 3px 12px #c8607a44;
+      }
+
+      /* ===== グリッド ===== */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+        gap: 16px;
+      }
+
+      /* ===== メンバーカード ===== */
+      .member-card {
+        background: linear-gradient(160deg, #fff8fc, #fdeef8);
+        border: 2px solid var(--rose);
+        border-radius: 20px;
+        overflow: hidden;
+        cursor: pointer;
+        position: relative;
+        box-shadow:
+          0 4px 20px #e8a0b420,
+          0 0 0 4px #fce8f088;
+        transition:
+          transform 0.22s,
+          box-shadow 0.22s;
+        animation: fadeUp 0.4s ease both;
+      }
+      .member-card:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow:
+          0 14px 36px #c8607a28,
+          0 0 0 4px #e8a0b466;
+      }
+
+      /* リボン風コーナー */
+      .member-card::before {
+        content: "✿";
+        position: absolute;
+        top: 7px;
+        right: 9px;
+        font-size: 0.7rem;
+        color: var(--pink);
+        opacity: 0.5;
+        z-index: 1;
+      }
+
+      .card-avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px 12px 12px;
+        background: radial-gradient(circle at 50% 50%, #fff0f8, #fde0ec);
+        position: relative;
+      }
+
+      .avatar-circle {
+        width: 76px;
+        height: 76px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 4px 16px #c8607a33,
+          0 0 0 4px #fff0f8;
+        overflow: hidden;
+        border: 3px solid white;
+      }
+      .avatar-circle svg {
+        width: 54px;
+        height: 54px;
+      }
+
+      .card-body {
+        padding: 8px 12px 14px;
+        border-top: 1px solid #f0d0e0;
+        text-align: center;
+      }
+
+      .gen-badge {
+        display: inline-block;
+        font-size: 0.62rem;
+        font-weight: 700;
+        padding: 2px 10px;
+        border-radius: 999px;
+        color: white;
+        letter-spacing: 0.08em;
+        margin-bottom: 6px;
+        box-shadow: 0 2px 6px #0002;
+      }
+
+      .card-name {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 3px;
+        line-height: 1.3;
+        letter-spacing: 0.04em;
+      }
+
+      .card-read {
+        font-size: 0.62rem;
+        color: var(--text-pale);
+        letter-spacing: 0.04em;
+      }
+
+      /* 空 */
+      .empty-msg {
+        text-align: center;
+        color: var(--text-pale);
+        font-size: 0.95rem;
+        padding: 48px 0;
+        grid-column: 1 / -1;
+        letter-spacing: 0.1em;
+      }
+
+      /* ===== モーダル ===== */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: #5a284088;
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        backdrop-filter: blur(4px);
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+
+      .modal {
+        background: linear-gradient(160deg, #fff8fc, #fdeef8);
+        border: 2px solid var(--pink);
+        border-radius: 24px;
+        width: min(400px, 100%);
+        box-shadow:
+          0 20px 60px #c8607a33,
+          0 0 0 8px #fce8f0;
+        position: relative;
+        animation: modalIn 0.3s ease both;
+        overflow: hidden;
+      }
+
+      @keyframes modalIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+
+      /* モーダル レース上部 */
+      .modal::before {
+        content: "✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿ ❀ ✿";
+        display: block;
+        text-align: center;
+        font-size: 0.65rem;
+        color: var(--pink);
+        opacity: 0.6;
+        padding: 6px 0 0;
+        letter-spacing: 0.08em;
+      }
+
+      .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        background: var(--rose);
+        border: 2px solid var(--pink);
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        font-size: 0.82rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--pink-deep);
+        transition:
+          background 0.15s,
+          transform 0.15s;
+        z-index: 2;
+      }
+      .modal-close:hover {
+        background: var(--pink);
+        color: white;
+        transform: rotate(90deg);
+      }
+
+      .modal-top {
+        padding: 16px 24px 22px;
+        text-align: center;
+        background: radial-gradient(circle at 50% 50%, #fff0f8, #fde0ec);
+        border-bottom: 1px solid #f0d0e0;
+        position: relative;
+      }
+
+      .modal-top::after {
+        content: "— ✦ —";
+        display: block;
+        color: var(--pink);
+        font-size: 0.75rem;
+        letter-spacing: 0.3em;
+        margin-top: 10px;
+        opacity: 0.7;
+      }
+
+      .modal-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow:
+          0 6px 24px #c8607a44,
+          0 0 0 5px white,
+          0 0 0 8px var(--rose);
+        margin: 0 auto 14px;
+        overflow: hidden;
+        animation: bobble 3.5s ease-in-out infinite;
+        border: 3px solid white;
+      }
+      .modal-avatar svg {
+        width: 72px;
+        height: 72px;
+      }
+
+      @keyframes bobble {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      .modal-name {
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: 0.1em;
+        margin-bottom: 4px;
+      }
+
+      .modal-read {
+        font-size: 0.78rem;
+        color: var(--text-pale);
+        letter-spacing: 0.1em;
+        margin-bottom: 10px;
+      }
+
+      .modal-body {
+        padding: 20px 24px 28px;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .info-box {
+        background: var(--cream);
+        border: 1.5px solid #f0d0e0;
+        border-radius: 14px;
+        padding: 12px 14px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .info-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--rose),
+          var(--pink),
+          var(--rose)
+        );
+        border-radius: 14px 14px 0 0;
+      }
+
+      .info-box .label {
+        font-size: 0.64rem;
+        color: var(--text-pale);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+      }
+
+      .info-box .value {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: 0.04em;
+      }
+
+      .info-box.full {
+        grid-column: span 2;
+      }
+
+      /* フッター */
+      footer {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 10px 24px 36px;
+        font-size: 0.75rem;
+        color: var(--text-pale);
+        letter-spacing: 0.12em;
+      }
+
+      footer::before {
+        content: "✿ ✦ ✿ ✦ ✿";
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.7rem;
+        color: var(--pink);
+        opacity: 0.5;
+        letter-spacing: 0.3em;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 花びら -->
+    <div class="petals" id="petals"></div>
+
+    <div class="page">
+      <!-- ヘッダー -->
+      <div class="header-card">
+        <div class="header-nav">
+          <a href="index.html" class="back-link">← おもどり</a>
+          <span class="member-count" id="memberCount"></span>
+        </div>
+        <div class="header-title">🌸 乃木坂メンバー図鑑 🌸</div>
+        <div class="header-sub">Nogizaka46 Members</div>
+        <div class="search-wrap">
+          <input
+            type="search"
+            class="search-box"
+            id="searchBox"
+            placeholder="お名前で検索いたします…"
+          />
+        </div>
+        <div class="gen-filters">
+          <button class="gen-btn active" data-gen="0">全員</button>
+          <button class="gen-btn" data-gen="3">三期生</button>
+          <button class="gen-btn" data-gen="4">四期生</button>
+          <button class="gen-btn" data-gen="5">五期生</button>
+          <button class="gen-btn" data-gen="6">六期生</button>
+        </div>
+      </div>
+
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <!-- モーダル -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal">
+        <button class="modal-close" id="modalClose">✕</button>
+        <div class="modal-top">
+          <div class="modal-avatar" id="modalAvatar"></div>
+          <div class="modal-name" id="modalName"></div>
+          <div class="modal-read" id="modalRead"></div>
+          <span class="gen-badge" id="modalGenBadge"></span>
+        </div>
+        <div class="modal-body">
+          <div class="info-grid" id="modalInfoGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <footer>© 2026 Example Website ✦ ※ 情報は変更される場合がございます</footer>
+
+    <script>
+      // 花びらを生成
+      const petalEmojis = ["🌸", "🌷", "✿", "❀", "🌺"];
+      const petalsEl = document.getElementById("petals");
+      for (let i = 0; i < 18; i++) {
+        const p = document.createElement("div");
+        p.className = "petal";
+        p.textContent = petalEmojis[i % petalEmojis.length];
+        p.style.left = Math.random() * 100 + "%";
+        p.style.animationDuration = 8 + Math.random() * 12 + "s";
+        p.style.animationDelay = Math.random() * 12 + "s";
+        p.style.fontSize = 0.8 + Math.random() * 0.8 + "rem";
+        petalsEl.appendChild(p);
+      }
+
+      function girlSvg() {
+        return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="white">
+          <circle cx="50" cy="28" r="16"/>
+          <ellipse cx="50" cy="20" rx="19" ry="13"/>
+          <ellipse cx="32" cy="28" rx="7" ry="11"/>
+          <ellipse cx="68" cy="28" rx="7" ry="11"/>
+          <path d="M30 56 Q28 72 25 88 Q37 92 50 92 Q63 92 75 88 Q72 72 70 56 Q62 50 50 50 Q38 50 30 56Z"/>
+          <rect x="44" y="43" width="12" height="10" rx="4"/>
+          <path d="M25 80 Q37 76 50 80 Q63 76 75 80" stroke="white" stroke-width="2" fill="none" opacity="0.5"/>
+        </svg>`;
+      }
+
+      const GEN_COLOR = {
+        3: "linear-gradient(135deg,#7ab0e0,#5080c0)",
+        4: "linear-gradient(135deg,#80c890,#50a060)",
+        5: "linear-gradient(135deg,#b080d8,#8050b8)",
+        6: "linear-gradient(135deg,#e87898,#c84870)",
+      };
+      const GEN_SOLID = {
+        3: "#5090c8",
+        4: "#50a864",
+        5: "#9060c0",
+        6: "#d05080",
+      };
+      const GEN_LABEL = { 3: "三期生", 4: "四期生", 5: "五期生", 6: "六期生" };
+
+      const MEMBERS = [
+        {
+          name: "伊藤理々杏",
+          read: "いとう りりあ",
+          gen: 3,
+          born: "2002/10/08",
+          blood: "B",
+          pref: "沖縄県",
+          height: "154cm",
+        },
+        {
+          name: "岩本蓮加",
+          read: "いわもと れんか",
+          gen: 3,
+          born: "2004/02/02",
+          blood: "B",
+          pref: "東京都",
+          height: "159cm",
+        },
+        {
+          name: "吉田綾乃クリスティー",
+          read: "よしだ あやのクリスティー",
+          gen: 3,
+          born: "1995/09/06",
+          blood: "A",
+          pref: "大分県",
+          height: "161cm",
+        },
+        {
+          name: "遠藤さくら",
+          read: "えんどう さくら",
+          gen: 4,
+          born: "2001/10/03",
+          blood: "O",
+          pref: "愛知県",
+          height: "164cm",
+        },
+        {
+          name: "賀喜遥香",
+          read: "かき はるか",
+          gen: 4,
+          born: "2001/08/08",
+          blood: "A",
+          pref: "栃木県",
+          height: "166cm",
+        },
+        {
+          name: "金川紗耶",
+          read: "かながわ さや",
+          gen: 4,
+          born: "2001/10/31",
+          blood: "O",
+          pref: "北海道",
+          height: "165cm",
+        },
+        {
+          name: "黒見明香",
+          read: "くろみ はるか",
+          gen: 4,
+          born: "2004/01/19",
+          blood: "O",
+          pref: "東京都",
+          height: "163cm",
+        },
+        {
+          name: "柴田柚菜",
+          read: "しばた ゆな",
+          gen: 4,
+          born: "2003/03/03",
+          blood: "A",
+          pref: "千葉県",
+          height: "160cm",
+        },
+        {
+          name: "田村真佑",
+          read: "たむら まゆ",
+          gen: 4,
+          born: "1999/01/12",
+          blood: "A",
+          pref: "埼玉県",
+          height: "160cm",
+        },
+        {
+          name: "筒井あやめ",
+          read: "つつい あやめ",
+          gen: 4,
+          born: "2004/06/08",
+          blood: "O",
+          pref: "愛知県",
+          height: "160cm",
+        },
+        {
+          name: "林瑠奈",
+          read: "はやし るな",
+          gen: 4,
+          born: "2003/10/02",
+          blood: "O",
+          pref: "神奈川県",
+          height: "164cm",
+        },
+        {
+          name: "弓木奈於",
+          read: "ゆみき なお",
+          gen: 4,
+          born: "1999/02/03",
+          blood: "A",
+          pref: "京都府",
+          height: "165cm",
+        },
+        {
+          name: "五百城茉央",
+          read: "いおき まお",
+          gen: 5,
+          born: "2005/07/29",
+          blood: "O",
+          pref: "兵庫県",
+          height: "166cm",
+        },
+        {
+          name: "池田瑛紗",
+          read: "いけだ てれさ",
+          gen: 5,
+          born: "2002/05/12",
+          blood: "不明",
+          pref: "東京都",
+          height: "162cm",
+        },
+        {
+          name: "一ノ瀬美空",
+          read: "いちのせ みく",
+          gen: 5,
+          born: "2003/05/24",
+          blood: "B",
+          pref: "福岡県",
+          height: "156cm",
+        },
+        {
+          name: "井上和",
+          read: "いのうえ なぎ",
+          gen: 5,
+          born: "2005/02/17",
+          blood: "B",
+          pref: "神奈川県",
+          height: "158cm",
+        },
+        {
+          name: "岡本姫奈",
+          read: "おかもと ひな",
+          gen: 5,
+          born: "2003/12/17",
+          blood: "A",
+          pref: "愛知県",
+          height: "160cm",
+        },
+        {
+          name: "小川彩",
+          read: "おがわ あや",
+          gen: 5,
+          born: "2007/06/27",
+          blood: "B",
+          pref: "千葉県",
+          height: "154cm",
+        },
+        {
+          name: "奥田いろは",
+          read: "おくだ いろは",
+          gen: 5,
+          born: "2005/08/20",
+          blood: "A",
+          pref: "千葉県",
+          height: "157cm",
+        },
+        {
+          name: "川﨑桜",
+          read: "かわさき さくら",
+          gen: 5,
+          born: "2003/04/17",
+          blood: "不明",
+          pref: "神奈川県",
+          height: "155cm",
+        },
+        {
+          name: "菅原咲月",
+          read: "すがわら さつき",
+          gen: 5,
+          born: "2005/10/31",
+          blood: "A",
+          pref: "千葉県",
+          height: "158.5cm",
+        },
+        {
+          name: "冨里奈央",
+          read: "とみさと なお",
+          gen: 5,
+          born: "2006/09/18",
+          blood: "O",
+          pref: "千葉県",
+          height: "164cm",
+        },
+        {
+          name: "中西アルノ",
+          read: "なかにし アルノ",
+          gen: 5,
+          born: "2003/03/17",
+          blood: "A",
+          pref: "千葉県",
+          height: "157cm",
+        },
+        {
+          name: "愛宕心響",
+          read: "あたご ここね",
+          gen: 6,
+          born: "2005/09/17",
+          blood: "不明",
+          pref: "兵庫県",
+          height: "160cm",
+        },
+        {
+          name: "大越ひなの",
+          read: "おおこし ひなの",
+          gen: 6,
+          born: "2004/12/01",
+          blood: "B",
+          pref: "静岡県",
+          height: "164cm",
+        },
+        {
+          name: "小津玲奈",
+          read: "おづ れいな",
+          gen: 6,
+          born: "2007/04/17",
+          blood: "AB",
+          pref: "東京都",
+          height: "155cm",
+        },
+        {
+          name: "海邉朱莉",
+          read: "かいべ あかり",
+          gen: 6,
+          born: "2007/02/14",
+          blood: "O",
+          pref: "兵庫県",
+          height: "166cm",
+        },
+        {
+          name: "川端晃菜",
+          read: "かわばた ひな",
+          gen: 6,
+          born: "2011/01/14",
+          blood: "B",
+          pref: "東京都",
+          height: "156cm",
+        },
+        {
+          name: "鈴木佑捺",
+          read: "すずき ゆうな",
+          gen: 6,
+          born: "2006/05/18",
+          blood: "AB",
+          pref: "山梨県",
+          height: "157cm",
+        },
+        {
+          name: "瀬戸口心月",
+          read: "せとぐち みつき",
+          gen: 6,
+          born: "2005/07/16",
+          blood: "A",
+          pref: "鹿児島県",
+          height: "153cm",
+        },
+        {
+          name: "長嶋凛桜",
+          read: "ながしま りお",
+          gen: 6,
+          born: "2007/05/25",
+          blood: "A",
+          pref: "北海道",
+          height: "157cm",
+        },
+        {
+          name: "増田三莉音",
+          read: "ますだ みりね",
+          gen: 6,
+          born: "2009/11/01",
+          blood: "O",
+          pref: "大阪府",
+          height: "156cm",
+        },
+        {
+          name: "森平麗心",
+          read: "もりひら うるみ",
+          gen: 6,
+          born: "2008/10/05",
+          blood: "A",
+          pref: "東京都",
+          height: "156cm",
+        },
+        {
+          name: "矢田萌華",
+          read: "やだ もえか",
+          gen: 6,
+          born: "2008/01/27",
+          blood: "B",
+          pref: "秋田県",
+          height: "161cm",
+        },
+      ].sort((a, b) => a.read.localeCompare(b.read, "ja"));
+
+      function calcAge(born) {
+        const [y, m, d] = born.split("/").map(Number);
+        const today = new Date(2026, 4, 23);
+        let age = today.getFullYear() - y;
+        if (
+          today.getMonth() + 1 < m ||
+          (today.getMonth() + 1 === m && today.getDate() < d)
+        )
+          age--;
+        return age;
+      }
+
+      function fmtBorn(born) {
+        const [y, m, d] = born.split("/").map(Number);
+        return `${y}年${m}月${d}日`;
+      }
+
+      let activeGen = 0,
+        searchQuery = "";
+
+      function filtered() {
+        return MEMBERS.filter((m) => {
+          const genOk = activeGen === 0 || m.gen === activeGen;
+          const q = searchQuery.trim();
+          const nameOk = !q || m.name.includes(q) || m.read.includes(q);
+          return genOk && nameOk;
+        });
+      }
+
+      function renderGrid(members) {
+        const grid = document.getElementById("grid");
+        grid.innerHTML = "";
+        if (members.length === 0) {
+          grid.innerHTML = `<div class="empty-msg">🌸 該当するメンバーが見つかりませんでした</div>`;
+          document.getElementById("memberCount").textContent = "0名";
+          return;
+        }
+        document.getElementById("memberCount").textContent =
+          `${members.length}名`;
+        members.forEach((m, i) => {
+          const grad = GEN_COLOR[m.gen] || "#e8a0b4";
+          const solid = GEN_SOLID[m.gen] || "#e8a0b4";
+          const card = document.createElement("div");
+          card.className = "member-card";
+          card.style.animationDelay = `${i * 0.04}s`;
+          card.dataset.idx = MEMBERS.indexOf(m);
+          card.innerHTML = `
+            <div class="card-avatar">
+              <div class="avatar-circle" style="background:${grad}">${girlSvg()}</div>
+            </div>
+            <div class="card-body">
+              <span class="gen-badge" style="background:${grad}">${GEN_LABEL[m.gen]}</span>
+              <div class="card-name">${m.name}</div>
+              <div class="card-read">${m.read}</div>
+            </div>`;
+          grid.appendChild(card);
+        });
+      }
+
+      function update() {
+        renderGrid(filtered());
+      }
+
+      document.querySelectorAll(".gen-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".gen-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeGen = Number(btn.dataset.gen);
+          update();
+        });
+      });
+
+      document.getElementById("searchBox").addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        update();
+      });
+
+      function openModal(member) {
+        const grad = GEN_COLOR[member.gen] || "#e8a0b4";
+        const solid = GEN_SOLID[member.gen] || "#e8a0b4";
+        document.getElementById("modalAvatar").style.background = grad;
+        document.getElementById("modalAvatar").innerHTML = girlSvg();
+        document.getElementById("modalName").textContent = member.name;
+        document.getElementById("modalRead").textContent = member.read;
+        const badge = document.getElementById("modalGenBadge");
+        badge.textContent = GEN_LABEL[member.gen];
+        badge.style.background = grad;
+        const bloodVal = member.blood === "不明" ? "不明" : `${member.blood}型`;
+        document.getElementById("modalInfoGrid").innerHTML = `
+          <div class="info-box full">
+            <div class="label">生年月日</div>
+            <div class="value">${fmtBorn(member.born)}</div>
+          </div>
+          <div class="info-box">
+            <div class="label">年齢</div>
+            <div class="value">${calcAge(member.born)}歳</div>
+          </div>
+          <div class="info-box">
+            <div class="label">血液型</div>
+            <div class="value">${bloodVal}</div>
+          </div>
+          <div class="info-box">
+            <div class="label">身長</div>
+            <div class="value">${member.height}</div>
+          </div>
+          <div class="info-box">
+            <div class="label">出身地</div>
+            <div class="value">${member.pref}</div>
+          </div>
+        `;
+        document.getElementById("modalOverlay").classList.add("open");
+      }
+
+      function closeModal() {
+        document.getElementById("modalOverlay").classList.remove("open");
+      }
+
+      document.getElementById("grid").addEventListener("click", (e) => {
+        const card = e.target.closest(".member-card[data-idx]");
+        if (card) openModal(MEMBERS[card.dataset.idx]);
+      });
+      document
+        .getElementById("modalClose")
+        .addEventListener("click", closeModal);
+      document.getElementById("modalOverlay").addEventListener("click", (e) => {
+        if (e.target === e.currentTarget) closeModal();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeModal();
+      });
+
+      update();
+    </script>
+  </body>
+</html>

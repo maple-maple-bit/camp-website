@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <title>Nogizaka46 Website</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --pink: #b09ad8;
+        --pink-deep: #7050a8;
+        --pink-pale: #ede8f8;
+        --rose: #d8cef0;
+        --cream: #f8f6ff;
+        --gold: #d4a060;
+        --text: #2e2050;
+        --text-mid: #7060a0;
+        --text-pale: #b0a0cc;
+      }
+
+      body {
+        font-family:
+          "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          160deg,
+          #ede8f8 0%,
+          #f0ecff 40%,
+          #e8e4f8 70%,
+          #ece8ff 100%
+        );
+        overflow-x: hidden;
+        color: var(--text);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          radial-gradient(circle at 15% 20%, #c8b8e888 0%, transparent 40%),
+          radial-gradient(circle at 85% 70%, #b8c8e888 0%, transparent 40%),
+          radial-gradient(circle at 50% 50%, #d8d0f044 0%, transparent 60%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* 花びら */
+      .petals {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+      }
+      .petal {
+        position: absolute;
+        top: -30px;
+        font-size: 1.1rem;
+        opacity: 0.55;
+        animation: petalFall linear infinite;
+      }
+      @keyframes petalFall {
+        0% {
+          transform: translateY(0) rotate(0deg) translateX(0);
+          opacity: 0.6;
+        }
+        50% {
+          transform: translateY(50vh) rotate(180deg) translateX(20px);
+        }
+        100% {
+          transform: translateY(105vh) rotate(360deg) translateX(-10px);
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(24px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .page {
+        position: relative;
+        z-index: 10;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      /* ヘッダーカード */
+      .header-card {
+        background: linear-gradient(160deg, #f8f6ff, #f0ecff);
+        border: 2px solid var(--pink);
+        border-radius: 24px;
+        padding: 28px 32px 24px;
+        box-shadow:
+          0 8px 40px #b09ad828,
+          0 0 0 6px #ede8f8;
+        position: relative;
+        animation: fadeUp 0.7s ease both;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .header-card::before {
+        content: "❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧";
+        position: absolute;
+        top: 8px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        color: var(--pink);
+        opacity: 0.6;
+        letter-spacing: 0.1em;
+        overflow: hidden;
+      }
+
+      .header-card::after {
+        content: "❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧";
+        position: absolute;
+        bottom: 8px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        color: var(--pink);
+        opacity: 0.4;
+        letter-spacing: 0.1em;
+        overflow: hidden;
+      }
+
+      .header-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+
+      .back-link {
+        font-size: 0.8rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        transition: color 0.2s;
+        letter-spacing: 0.06em;
+      }
+      .back-link:hover {
+        color: var(--pink-deep);
+      }
+
+      .header-title {
+        font-size: clamp(1.4rem, 4vw, 2rem);
+        font-weight: 700;
+        color: var(--pink-deep);
+        letter-spacing: 0.18em;
+        margin-bottom: 6px;
+        text-shadow: 0 2px 8px #b09ad840;
+      }
+
+      .header-sub {
+        font-size: 0.78rem;
+        color: var(--text-pale);
+        letter-spacing: 0.22em;
+      }
+
+      /* コンテンツカード */
+      .card {
+        background: linear-gradient(160deg, #fff8fc, #fdeef8);
+        border: 2px solid var(--rose);
+        border-radius: 20px;
+        padding: 28px 32px;
+        box-shadow:
+          0 4px 24px #b09ad820,
+          0 0 0 4px #fce8f088;
+        animation: fadeUp 0.5s ease both;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--rose),
+          var(--pink),
+          var(--rose)
+        );
+        border-radius: 20px 20px 0 0;
+      }
+
+      .card-title {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--pink-deep);
+        letter-spacing: 0.14em;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .card-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--rose), transparent);
+      }
+
+      .card p {
+        font-size: 0.95rem;
+        color: var(--text-mid);
+        line-height: 1.9;
+        letter-spacing: 0.06em;
+        margin-bottom: 18px;
+      }
+
+      /* リンクリスト */
+      .link-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .link-list li a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--pink-deep);
+        text-decoration: none;
+        padding: 10px 20px;
+        border-radius: 999px;
+        border: 2px solid var(--pink);
+        background: var(--cream);
+        letter-spacing: 0.08em;
+        transition:
+          background 0.2s,
+          box-shadow 0.2s,
+          transform 0.15s;
+      }
+
+      .link-list li a::before {
+        content: "✦";
+        font-size: 0.7rem;
+        color: var(--pink);
+      }
+
+      .link-list li a:hover {
+        background: linear-gradient(135deg, #e8d8f8, #d8c8f0);
+        box-shadow: 0 4px 16px #b09ad830;
+        transform: translateX(4px);
+      }
+
+      /* YouTube埋め込み */
+      .video-wrap {
+        position: relative;
+        padding-top: 56.25%;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 6px 28px #b09ad830;
+        border: 2px solid var(--rose);
+      }
+
+      .video-wrap iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      /* フッター */
+      footer {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 10px 24px 36px;
+        font-size: 0.75rem;
+        color: var(--text-pale);
+        letter-spacing: 0.12em;
+      }
+
+      footer::before {
+        content: "✿ ✦ ✿ ✦ ✿";
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.7rem;
+        color: var(--pink);
+        opacity: 0.5;
+        letter-spacing: 0.3em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="petals" id="petals"></div>
+
+    <div class="page">
+      <div class="header-card">
+        <div class="header-nav">
+          <a href="index.html" class="back-link">← おもどり</a>
+          <span
+            style="
+              font-size: 0.75rem;
+              color: var(--text-pale);
+              letter-spacing: 0.1em;
+            "
+            >Nogizaka46</span
+          >
+        </div>
+        <div class="header-title">🌸 乃木坂46 Website 🌸</div>
+        <div class="header-sub">Official Fan Page</div>
+      </div>
+
+      <div class="card" style="animation-delay: 0.1s">
+        <div class="card-title">✿ ようこそ</div>
+        <p>これは乃木坂46のウェブサイトです。</p>
+        <ul class="link-list">
+          <li>
+            <a
+              href="https://www.nogizaka46.com/s/n46/?ima=5743"
+              target="_blank"
+              rel="noopener"
+            >
+              乃木坂46 公式サイト
+            </a>
+          </li>
+          <li>
+            <a href="nogizaka.html"> 乃木坂メンバー図鑑 </a>
+          </li>
+          <li>
+            <a href="senbatu.html"> 選抜メーカー </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card" style="animation-delay: 0.2s">
+        <div class="card-title">🌷 最新曲</div>
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/GuKqBjTvTC"
+            title="乃木坂46 最新曲"
+            allow="
+              accelerometer;
+              autoplay;
+              clipboard-write;
+              encrypted-media;
+              gyroscope;
+              picture-in-picture;
+            "
+            allowfullscreen
+          >
+          </iframe>
+        </div>
+      </div>
+    </div>
+
+    <footer>© 2026 Example Website ✦ ※ 情報は変更される場合がございます</footer>
+
+    <script>
+      const petalEmojis = ["🌸", "🌷", "✿", "❀", "🌺"];
+      const petalsEl = document.getElementById("petals");
+      for (let i = 0; i < 18; i++) {
+        const p = document.createElement("div");
+        p.className = "petal";
+        p.textContent = petalEmojis[i % petalEmojis.length];
+        p.style.left = Math.random() * 100 + "%";
+        p.style.animationDuration = 8 + Math.random() * 12 + "s";
+        p.style.animationDelay = Math.random() * 12 + "s";
+        p.style.fontSize = 0.8 + Math.random() * 0.8 + "rem";
+        petalsEl.appendChild(p);
+      }
+    </script>
+  </body>
+</html>

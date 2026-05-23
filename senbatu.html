@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <title>選抜メーカー — 乃木坂46</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --pink: #b09ad8;
+        --pink-deep: #7050a8;
+        --pink-pale: #ede8f8;
+        --rose: #d8cef0;
+        --cream: #f8f6ff;
+        --text: #2e2050;
+        --text-mid: #7060a0;
+        --text-pale: #b0a0cc;
+      }
+
+      body {
+        font-family:
+          "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+        min-height: 100vh;
+        background: linear-gradient(
+          160deg,
+          #ede8f8 0%,
+          #f0ecff 40%,
+          #e8e4f8 70%,
+          #ece8ff 100%
+        );
+        overflow-x: hidden;
+        color: var(--text);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image:
+          radial-gradient(circle at 15% 20%, #c8b8e888 0%, transparent 40%),
+          radial-gradient(circle at 85% 70%, #b8c8e888 0%, transparent 40%);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .petals {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        overflow: hidden;
+      }
+      .petal {
+        position: absolute;
+        top: -30px;
+        font-size: 1.1rem;
+        opacity: 0.55;
+        animation: petalFall linear infinite;
+      }
+      @keyframes petalFall {
+        0% {
+          transform: translateY(0) rotate(0deg) translateX(0);
+          opacity: 0.6;
+        }
+        50% {
+          transform: translateY(50vh) rotate(180deg) translateX(20px);
+        }
+        100% {
+          transform: translateY(105vh) rotate(360deg) translateX(-10px);
+          opacity: 0;
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .page {
+        position: relative;
+        z-index: 10;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 40px 20px 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      /* ヘッダー */
+      .header-card {
+        background: linear-gradient(160deg, #f8f6ff, #f0ecff);
+        border: 2px solid var(--pink);
+        border-radius: 24px;
+        padding: 28px 32px 22px;
+        box-shadow:
+          0 8px 40px #b09ad828,
+          0 0 0 6px #ede8f8;
+        text-align: center;
+        animation: fadeUp 0.7s ease both;
+        position: relative;
+        overflow: hidden;
+      }
+      .header-card::before {
+        content: "❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧";
+        position: absolute;
+        top: 8px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        color: var(--pink);
+        opacity: 0.6;
+        letter-spacing: 0.1em;
+        overflow: hidden;
+      }
+      .header-card::after {
+        content: "❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧ ✿ ❧";
+        position: absolute;
+        bottom: 8px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        color: var(--pink);
+        opacity: 0.4;
+        letter-spacing: 0.1em;
+        overflow: hidden;
+      }
+      .header-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+      .back-link {
+        font-size: 0.8rem;
+        color: var(--text-mid);
+        text-decoration: none;
+        transition: color 0.2s;
+        letter-spacing: 0.06em;
+      }
+      .back-link:hover {
+        color: var(--pink-deep);
+      }
+      .header-title {
+        font-size: clamp(1.3rem, 4vw, 1.9rem);
+        font-weight: 700;
+        color: var(--pink-deep);
+        letter-spacing: 0.18em;
+        margin-bottom: 6px;
+        text-shadow: 0 2px 8px #b09ad840;
+      }
+      .header-sub {
+        font-size: 0.78rem;
+        color: var(--text-pale);
+        letter-spacing: 0.2em;
+      }
+
+      /* パネル共通 */
+      .panel {
+        background: linear-gradient(160deg, #fff8fc, #fdeef8);
+        border: 2px solid var(--rose);
+        border-radius: 20px;
+        padding: 22px 24px;
+        box-shadow:
+          0 4px 24px #b09ad820,
+          0 0 0 4px #fce8f088;
+        animation: fadeUp 0.5s ease both;
+        position: relative;
+        overflow: hidden;
+      }
+      .panel::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--rose),
+          var(--pink),
+          var(--rose)
+        );
+        border-radius: 20px 20px 0 0;
+      }
+      .panel-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--pink-deep);
+        letter-spacing: 0.14em;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .panel-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--rose), transparent);
+      }
+
+      /* フィルター */
+      .filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+      }
+      .filter-btn {
+        font-family: inherit;
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 6px 16px;
+        border-radius: 999px;
+        border: 2px solid var(--pink);
+        color: var(--pink-deep);
+        background: transparent;
+        cursor: pointer;
+        letter-spacing: 0.08em;
+        transition:
+          background 0.2s,
+          color 0.2s,
+          transform 0.15s;
+      }
+      .filter-btn:hover {
+        background: #f0e8ff;
+      }
+      .filter-btn:active {
+        transform: scale(0.95);
+      }
+      .filter-btn.active {
+        background: linear-gradient(135deg, #b09ad8, #7050a8);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 3px 12px #7050a844;
+      }
+
+      /* メンバーグリッド */
+      .member-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 10px;
+      }
+
+      .member-tile {
+        background: var(--cream);
+        border: 2px solid var(--rose);
+        border-radius: 14px;
+        padding: 10px 8px;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          transform 0.18s,
+          box-shadow 0.18s,
+          border-color 0.18s,
+          background 0.18s;
+        user-select: none;
+        position: relative;
+      }
+      .member-tile:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px #b09ad830;
+      }
+      .member-tile.selected {
+        background: linear-gradient(160deg, #f0e8ff, #e8d8f8);
+        border-color: var(--pink-deep);
+        box-shadow:
+          0 0 0 3px #b09ad840,
+          0 6px 20px #7050a830;
+      }
+      .member-tile.selected::after {
+        content: "✓";
+        position: absolute;
+        top: 4px;
+        right: 6px;
+        font-size: 0.7rem;
+        color: var(--pink-deep);
+        font-weight: 700;
+      }
+
+      .tile-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        margin: 0 auto 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid white;
+        box-shadow: 0 2px 8px #0002;
+      }
+      .tile-avatar svg {
+        width: 38px;
+        height: 38px;
+      }
+
+      .tile-gen {
+        font-size: 0.58rem;
+        font-weight: 700;
+        padding: 1px 7px;
+        border-radius: 999px;
+        color: white;
+        letter-spacing: 0.06em;
+        display: inline-block;
+        margin-bottom: 4px;
+      }
+      .tile-name {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.3;
+        letter-spacing: 0.02em;
+      }
+
+      /* 選抜エリア */
+      .senbatu-area {
+        min-height: 120px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-content: flex-start;
+      }
+
+      .senbatu-empty {
+        color: var(--text-pale);
+        font-size: 0.9rem;
+        letter-spacing: 0.1em;
+        text-align: center;
+        width: 100%;
+        padding: 28px 0;
+      }
+
+      .senbatu-chip {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #f0e8ff, #e8d8f8);
+        border: 2px solid var(--pink);
+        border-radius: 999px;
+        padding: 6px 12px 6px 8px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--pink-deep);
+        letter-spacing: 0.05em;
+        animation: fadeUp 0.3s ease both;
+        position: relative;
+      }
+
+      .chip-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid white;
+        flex-shrink: 0;
+      }
+      .chip-avatar svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .chip-remove {
+        background: none;
+        border: none;
+        font-size: 0.75rem;
+        color: var(--text-pale);
+        cursor: pointer;
+        padding: 0 0 0 4px;
+        transition: color 0.15s;
+        line-height: 1;
+      }
+      .chip-remove:hover {
+        color: #c84870;
+      }
+
+      /* カウンター＆ボタン行 */
+      .action-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 4px;
+      }
+
+      .count-badge {
+        font-size: 0.85rem;
+        color: var(--text-mid);
+        letter-spacing: 0.08em;
+      }
+      .count-badge span {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--pink-deep);
+      }
+
+      .btn {
+        font-family: inherit;
+        font-size: 0.82rem;
+        font-weight: 700;
+        padding: 8px 20px;
+        border-radius: 999px;
+        cursor: pointer;
+        letter-spacing: 0.08em;
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s;
+        border: 2px solid var(--pink);
+      }
+      .btn:active {
+        transform: scale(0.95);
+      }
+      .btn-clear {
+        background: transparent;
+        color: var(--text-mid);
+      }
+      .btn-clear:hover {
+        background: #f0e8ff;
+        color: var(--pink-deep);
+      }
+      .btn-share {
+        background: linear-gradient(135deg, #b09ad8, #7050a8);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 3px 14px #7050a840;
+      }
+      .btn-share:hover {
+        box-shadow: 0 6px 20px #7050a860;
+        transform: translateY(-1px);
+      }
+
+      /* ポジション選択（チップ内） */
+      .chip-pos-select {
+        font-family: inherit;
+        font-size: 0.72rem;
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1.5px solid var(--pink);
+        color: var(--text);
+        background: var(--cream);
+        outline: none;
+        cursor: pointer;
+        letter-spacing: 0.04em;
+        max-width: 82px;
+        flex-shrink: 0;
+      }
+      .chip-pos-select:focus { box-shadow: 0 0 0 2px #b09ad840; }
+
+      /* 結果カード */
+      #resultCard {
+        display: none;
+      }
+      #resultCard.visible {
+        display: block;
+      }
+
+      .result-header {
+        text-align: center;
+        margin-bottom: 18px;
+      }
+      .result-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--pink-deep);
+        letter-spacing: 0.16em;
+        margin-bottom: 4px;
+      }
+      .result-sub {
+        font-size: 0.75rem;
+        color: var(--text-pale);
+        letter-spacing: 0.12em;
+      }
+
+      .result-grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+      }
+
+      /* 各ポジション行 */
+      .result-row {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        gap: 6px;
+      }
+      .result-row-label {
+        font-size: 0.68rem;
+        color: var(--text-pale);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+      .result-row-members {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        width: 100%;
+      }
+
+      /* センター単独スロット */
+      .result-center-solo {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+
+      /* その他メンバー行（ポジション未設定） */
+      .result-others {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .result-member {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        width: 80px;
+        animation: fadeUp 0.3s ease both;
+      }
+      .result-member.center .result-avatar {
+        box-shadow:
+          0 0 0 5px gold,
+          0 6px 24px #d4a06080;
+        width: 90px;
+        height: 90px;
+      }
+      .result-member.center .result-avatar svg {
+        width: 66px;
+        height: 66px;
+      }
+      .result-member.center .result-name {
+        color: var(--pink-deep);
+        font-weight: 700;
+        font-size: 0.85rem;
+      }
+      .result-crown {
+        font-size: 1.3rem;
+        line-height: 1;
+      }
+      .result-avatar {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid white;
+        box-shadow: 0 2px 10px #0002;
+      }
+      .result-avatar svg {
+        width: 42px;
+        height: 42px;
+      }
+      .result-name {
+        font-size: 0.7rem;
+        color: var(--text);
+        text-align: center;
+        line-height: 1.4;
+        letter-spacing: 0.02em;
+      }
+      .result-gen-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+      }
+
+      /* センターと他メンバーの区切り線 */
+      .result-divider {
+        width: 60%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--rose), transparent);
+      }
+
+      footer {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 10px 24px 36px;
+        font-size: 0.75rem;
+        color: var(--text-pale);
+        letter-spacing: 0.12em;
+      }
+      footer::before {
+        content: "✿ ✦ ✿ ✦ ✿";
+        display: block;
+        margin-bottom: 8px;
+        font-size: 0.7rem;
+        color: var(--pink);
+        opacity: 0.5;
+        letter-spacing: 0.3em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="petals" id="petals"></div>
+
+    <div class="page">
+      <!-- ヘッダー -->
+      <div class="header-card">
+        <div class="header-nav">
+          <a href="noigizakaindex.html" class="back-link">← おもどり</a>
+          <span
+            style="
+              font-size: 0.75rem;
+              color: var(--text-pale);
+              letter-spacing: 0.1em;
+            "
+            >Nogizaka46</span
+          >
+        </div>
+        <div class="header-title">🌸 選抜メーカー 🌸</div>
+        <div class="header-sub">My Senbatsu Maker</div>
+      </div>
+
+      <!-- メンバー選択パネル -->
+      <div class="panel" style="animation-delay: 0.1s">
+        <div class="panel-title">✿ メンバーを選ぶ</div>
+        <div class="filters">
+          <button class="filter-btn active" data-gen="0">全員</button>
+          <button class="filter-btn" data-gen="3">三期生</button>
+          <button class="filter-btn" data-gen="4">四期生</button>
+          <button class="filter-btn" data-gen="5">五期生</button>
+          <button class="filter-btn" data-gen="6">六期生</button>
+        </div>
+        <div class="member-grid" id="memberGrid"></div>
+      </div>
+
+      <!-- 選抜パネル -->
+      <div class="panel" style="animation-delay: 0.2s">
+        <div class="panel-title">🌷 わたしの選抜</div>
+
+        <div class="action-row" style="margin-bottom: 14px">
+          <div class="count-badge">
+            選抜メンバー：<span id="countNum">0</span>名
+          </div>
+          <div style="display: flex; gap: 8px">
+            <button class="btn btn-clear" id="clearBtn">クリア</button>
+            <button class="btn btn-share" id="showBtn">選抜を見る ✦</button>
+          </div>
+        </div>
+
+        <div class="senbatu-area" id="senbatuArea">
+          <div class="senbatu-empty" id="emptyMsg">
+            🌸 メンバーを選んでください
+          </div>
+        </div>
+      </div>
+
+      <!-- 結果パネル -->
+      <div class="panel" id="resultCard" style="animation-delay: 0.1s">
+        <div class="panel-title">🌺 選抜結果</div>
+        <div class="result-header">
+          <div class="result-title" id="resultTitle">わたしの選抜</div>
+          <div class="result-sub" id="resultSub"></div>
+        </div>
+        <div class="result-grid" id="resultGrid"></div>
+      </div>
+    </div>
+
+    <footer>© 2026 Example Website ✦ ※ 情報は変更される場合がございます</footer>
+
+    <script>
+      // 花びら
+      const petalEmojis = ["🌸", "🌷", "✿", "❀", "🌺"];
+      const petalsEl = document.getElementById("petals");
+      for (let i = 0; i < 18; i++) {
+        const p = document.createElement("div");
+        p.className = "petal";
+        p.textContent = petalEmojis[i % petalEmojis.length];
+        p.style.left = Math.random() * 100 + "%";
+        p.style.animationDuration = 8 + Math.random() * 12 + "s";
+        p.style.animationDelay = Math.random() * 12 + "s";
+        p.style.fontSize = 0.8 + Math.random() * 0.8 + "rem";
+        petalsEl.appendChild(p);
+      }
+
+      // 定数
+      const GEN_COLOR = {
+        3: "linear-gradient(135deg,#7ab0e0,#5080c0)",
+        4: "linear-gradient(135deg,#80c890,#50a060)",
+        5: "linear-gradient(135deg,#b080d8,#8050b8)",
+        6: "linear-gradient(135deg,#e87898,#c84870)",
+      };
+      const GEN_SOLID = {
+        3: "#5090c8",
+        4: "#50a864",
+        5: "#9060c0",
+        6: "#d05080",
+      };
+      const GEN_LABEL = { 3: "三期生", 4: "四期生", 5: "五期生", 6: "六期生" };
+
+      const MEMBERS = [
+        { name: "伊藤理々杏", read: "いとう りりあ", gen: 3 },
+        { name: "岩本蓮加", read: "いわもと れんか", gen: 3 },
+        {
+          name: "吉田綾乃クリスティー",
+          read: "よしだ あやのクリスティー",
+          gen: 3,
+        },
+        { name: "遠藤さくら", read: "えんどう さくら", gen: 4 },
+        { name: "賀喜遥香", read: "かき はるか", gen: 4 },
+        { name: "金川紗耶", read: "かながわ さや", gen: 4 },
+        { name: "黒見明香", read: "くろみ はるか", gen: 4 },
+        { name: "柴田柚菜", read: "しばた ゆな", gen: 4 },
+        { name: "田村真佑", read: "たむら まゆ", gen: 4 },
+        { name: "筒井あやめ", read: "つつい あやめ", gen: 4 },
+        { name: "林瑠奈", read: "はやし るな", gen: 4 },
+        { name: "弓木奈於", read: "ゆみき なお", gen: 4 },
+        { name: "五百城茉央", read: "いおき まお", gen: 5 },
+        { name: "池田瑛紗", read: "いけだ てれさ", gen: 5 },
+        { name: "一ノ瀬美空", read: "いちのせ みく", gen: 5 },
+        { name: "井上和", read: "いのうえ なぎ", gen: 5 },
+        { name: "岡本姫奈", read: "おかもと ひな", gen: 5 },
+        { name: "小川彩", read: "おがわ あや", gen: 5 },
+        { name: "奥田いろは", read: "おくだ いろは", gen: 5 },
+        { name: "川﨑桜", read: "かわさき さくら", gen: 5 },
+        { name: "菅原咲月", read: "すがわら さつき", gen: 5 },
+        { name: "冨里奈央", read: "とみさと なお", gen: 5 },
+        { name: "中西アルノ", read: "なかにし アルノ", gen: 5 },
+        { name: "愛宕心響", read: "あたご ここね", gen: 6 },
+        { name: "大越ひなの", read: "おおこし ひなの", gen: 6 },
+        { name: "小津玲奈", read: "おづ れいな", gen: 6 },
+        { name: "海邉朱莉", read: "かいべ あかり", gen: 6 },
+        { name: "川端晃菜", read: "かわばた ひな", gen: 6 },
+        { name: "鈴木佑捺", read: "すずき ゆうな", gen: 6 },
+        { name: "瀬戸口心月", read: "せとぐち みつき", gen: 6 },
+        { name: "長嶋凛桜", read: "ながしま りお", gen: 6 },
+        { name: "増田三莉音", read: "ますだ みりね", gen: 6 },
+        { name: "森平麗心", read: "もりひら うるみ", gen: 6 },
+        { name: "矢田萌華", read: "やだ もえか", gen: 6 },
+      ].sort((a, b) => a.read.localeCompare(b.read, "ja"));
+
+      function girlSvg(fillColor = "white") {
+        return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="${fillColor}">
+          <circle cx="50" cy="28" r="16"/>
+          <ellipse cx="50" cy="20" rx="19" ry="13"/>
+          <ellipse cx="32" cy="28" rx="7" ry="11"/>
+          <ellipse cx="68" cy="28" rx="7" ry="11"/>
+          <path d="M30 56 Q28 72 25 88 Q37 92 50 92 Q63 92 75 88 Q72 72 70 56 Q62 50 50 50 Q38 50 30 56Z"/>
+          <rect x="44" y="43" width="12" height="10" rx="4"/>
+        </svg>`;
+      }
+
+      // ポジション定義（表示順）
+      const POSITIONS = [
+        { value: "center", label: "センター",  row: 0 },
+        { value: "front",  label: "前列",      row: 1 },
+        { value: "mid",    label: "中列",      row: 2 },
+        { value: "back",   label: "後列",      row: 3 },
+        { value: "none",   label: "未設定",    row: 4 },
+      ];
+
+      // 状態
+      let activeGen = 0;
+      // name → position value
+      const positions = {};
+
+      // --- グリッド描画 ---
+      function renderGrid() {
+        const grid = document.getElementById("memberGrid");
+        grid.innerHTML = "";
+        const list = activeGen === 0 ? MEMBERS : MEMBERS.filter((m) => m.gen === activeGen);
+        list.forEach((m) => {
+          const tile = document.createElement("div");
+          tile.className = "member-tile" + (positions[m.name] ? " selected" : "");
+          tile.dataset.name = m.name;
+          tile.innerHTML = `
+            <div class="tile-avatar" style="background:${GEN_COLOR[m.gen]}">${girlSvg()}</div>
+            <span class="tile-gen" style="background:${GEN_COLOR[m.gen]}">${GEN_LABEL[m.gen]}</span>
+            <div class="tile-name">${m.name}</div>`;
+          grid.appendChild(tile);
+        });
+      }
+
+      // --- チップ描画 ---
+      function renderChips() {
+        const area = document.getElementById("senbatuArea");
+        const count = Object.keys(positions).length;
+        document.getElementById("countNum").textContent = count;
+
+        if (count === 0) {
+          area.innerHTML = `<div class="senbatu-empty">🌸 メンバーを選んでください</div>`;
+          return;
+        }
+
+        area.innerHTML = "";
+        Object.keys(positions).forEach((name, i) => {
+          const m = MEMBERS.find((x) => x.name === name);
+          const chip = document.createElement("div");
+          chip.className = "senbatu-chip";
+          chip.style.animationDelay = `${i * 0.03}s`;
+
+          // ポジションselectのoptions
+          const opts = POSITIONS.map((p) =>
+            `<option value="${p.value}" ${positions[name] === p.value ? "selected" : ""}>${p.label}</option>`
+          ).join("");
+
+          chip.innerHTML = `
+            <div class="chip-avatar" style="background:${GEN_COLOR[m.gen]}">${girlSvg()}</div>
+            <span>${name}</span>
+            <select class="chip-pos-select" data-name="${name}">${opts}</select>
+            <button class="chip-remove" data-name="${name}" title="外す">✕</button>`;
+          area.appendChild(chip);
+        });
+      }
+
+      // --- タイルクリック ---
+      document.getElementById("memberGrid").addEventListener("click", (e) => {
+        const tile = e.target.closest(".member-tile");
+        if (!tile) return;
+        const name = tile.dataset.name;
+        if (positions[name]) {
+          delete positions[name];
+        } else {
+          positions[name] = "none";
+        }
+        tile.classList.toggle("selected", !!positions[name]);
+        renderChips();
+        document.getElementById("resultCard").classList.remove("visible");
+      });
+
+      // --- チップ：ポジション変更 ---
+      document.getElementById("senbatuArea").addEventListener("change", (e) => {
+        const sel = e.target.closest(".chip-pos-select");
+        if (!sel) return;
+        positions[sel.dataset.name] = sel.value;
+        document.getElementById("resultCard").classList.remove("visible");
+      });
+
+      // --- チップ削除 ---
+      document.getElementById("senbatuArea").addEventListener("click", (e) => {
+        const btn = e.target.closest(".chip-remove");
+        if (!btn) return;
+        delete positions[btn.dataset.name];
+        renderGrid();
+        renderChips();
+        document.getElementById("resultCard").classList.remove("visible");
+      });
+
+      // --- フィルター ---
+      document.querySelectorAll(".filter-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          activeGen = Number(btn.dataset.gen);
+          renderGrid();
+        });
+      });
+
+      // --- クリア ---
+      document.getElementById("clearBtn").addEventListener("click", () => {
+        Object.keys(positions).forEach((k) => delete positions[k]);
+        renderGrid();
+        renderChips();
+        document.getElementById("resultCard").classList.remove("visible");
+      });
+
+      // --- 選抜を見る ---
+      document.getElementById("showBtn").addEventListener("click", () => {
+        if (Object.keys(positions).length === 0) {
+          alert("メンバーを選んでください 🌸");
+          return;
+        }
+        renderResult();
+        const card = document.getElementById("resultCard");
+        card.classList.add("visible");
+        card.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      function makeMemberEl(name, posVal, delay) {
+        const m = MEMBERS.find((x) => x.name === name);
+        const isCenter = posVal === "center";
+        const wrap = document.createElement("div");
+        wrap.className = "result-member" + (isCenter ? " center" : "");
+        wrap.style.animationDelay = `${delay}s`;
+        wrap.innerHTML = `
+          ${isCenter ? `<div class="result-crown">👑</div>` : ""}
+          <div class="result-avatar" style="background:${GEN_COLOR[m.gen]}">${girlSvg()}</div>
+          <div class="result-name">${name}</div>
+          <div class="result-gen-dot" style="background:${GEN_SOLID[m.gen]}" title="${GEN_LABEL[m.gen]}"></div>`;
+        return wrap;
+      }
+
+      function renderResult() {
+        const names = Object.keys(positions);
+        document.getElementById("resultSub").textContent = `${names.length}名選抜`;
+
+        const grid = document.getElementById("resultGrid");
+        grid.innerHTML = "";
+
+        // ポジションごとにグループ化
+        const groups = {};
+        POSITIONS.forEach((p) => { groups[p.value] = []; });
+        names.forEach((name) => {
+          const pos = positions[name] || "none";
+          groups[pos].push(name);
+        });
+
+        let delay = 0;
+        POSITIONS.forEach((p) => {
+          const members = groups[p.value];
+          if (members.length === 0) return;
+
+          const row = document.createElement("div");
+          row.className = "result-row";
+
+          const label = document.createElement("div");
+          label.className = "result-row-label";
+          label.textContent = p.label;
+          row.appendChild(label);
+
+          const membersRow = document.createElement("div");
+          if (p.value === "center") {
+            membersRow.className = "result-center-solo";
+          } else {
+            membersRow.className = "result-row-members";
+          }
+
+          members.forEach((name) => {
+            membersRow.appendChild(makeMemberEl(name, p.value, delay));
+            delay += 0.05;
+          });
+          row.appendChild(membersRow);
+
+          if (p.value !== "none") {
+            const divider = document.createElement("div");
+            divider.className = "result-divider";
+            grid.appendChild(row);
+            grid.appendChild(divider);
+          } else {
+            grid.appendChild(row);
+          }
+        });
+      }
+
+      // 初期描画
+      renderGrid();
+      renderChips();
+    </script>
+  </body>
+</html>
