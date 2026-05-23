@@ -2,65 +2,471 @@
 <html lang="ja">
   <head>
     <title>数当てゲーム</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-      #guessGame {
-        margin: 20px;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      #guessGame input {
-        width: 200px;
+      body {
+        font-family: "Hiragino Mincho ProN", "Yu Mincho", "Georgia", serif;
+        min-height: 100vh;
+        background: linear-gradient(180deg,
+          #a8d8ea 0%,
+          #c9e8f5 30%,
+          #e8f4e8 65%,
+          #7ab648 65%,
+          #5a8a3c 100%
+        );
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
       }
+
+      /* 雲 */
+      .clouds {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 55%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .cloud {
+        position: absolute;
+        background: white;
+        border-radius: 50px;
+        opacity: 0.88;
+        filter: blur(1px);
+      }
+
+      .cloud::before,
+      .cloud::after {
+        content: "";
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+      }
+
+      .c1 { width: 120px; height: 36px; top: 10%; animation: drift 28s linear infinite; left: -140px; }
+      .c1::before { width: 60px; height: 60px; top: -28px; left: 18px; }
+      .c1::after  { width: 44px; height: 44px; top: -18px; left: 54px; }
+
+      .c2 { width: 90px; height: 26px; top: 22%; animation: drift 38s linear infinite; animation-delay: -12s; left: -110px; opacity: 0.75; }
+      .c2::before { width: 44px; height: 44px; top: -22px; left: 12px; }
+      .c2::after  { width: 32px; height: 32px; top: -14px; left: 40px; }
+
+      .c3 { width: 150px; height: 40px; top: 6%; animation: drift 46s linear infinite; animation-delay: -20s; left: -170px; opacity: 0.65; }
+      .c3::before { width: 70px; height: 70px; top: -34px; left: 22px; }
+      .c3::after  { width: 52px; height: 52px; top: -24px; left: 70px; }
+
+      @keyframes drift {
+        from { transform: translateX(0); }
+        to   { transform: translateX(calc(100vw + 200px)); }
+      }
+
+      /* 草 */
+      .grass-layer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 38%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .grass-blades {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+      }
+
+      .blade {
+        width: 6px;
+        background: linear-gradient(to top, #3d6b24, #7ab648);
+        border-radius: 3px 3px 0 0;
+        transform-origin: bottom center;
+        animation: sway 3s ease-in-out infinite;
+      }
+
+      .blade:nth-child(even)  { animation-direction: alternate-reverse; }
+      .blade:nth-child(3n)    { animation-duration: 3.6s; }
+      .blade:nth-child(5n)    { animation-duration: 2.7s; }
+
+      @keyframes sway {
+        0%, 100% { transform: rotate(-4deg); }
+        50%       { transform: rotate(4deg); }
+      }
+
+      /* 木 */
+      .tree {
+        position: fixed;
+        bottom: 30%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .tree-left  { left: 3%; }
+      .tree-right { right: 3%; transform: scaleX(-1); }
+
+      .tree svg { display: block; }
+
+      /* カード */
+      .card {
+        position: relative;
+        z-index: 10;
+        background: linear-gradient(160deg, #fdf3dc, #f5e6c0);
+        border: 3px solid #c8a96e;
+        border-radius: 20px;
+        padding: 44px 40px 36px;
+        width: min(420px, 88vw);
+        text-align: center;
+        box-shadow:
+          0 8px 32px #0000002a,
+          inset 0 1px 0 #fffde8,
+          0 0 0 6px #e8d5a088;
+        animation: fadeIn 0.8s ease both;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(30px) scale(0.97); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border: 1px dashed #c8a96e66;
+        border-radius: 14px;
+        pointer-events: none;
+      }
+
+      .back-link {
+        position: absolute;
+        top: 16px;
+        left: 20px;
+        font-size: 0.78rem;
+        color: #9a7a40;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .back-link:hover { color: #5a3a10; }
+
+      .game-icon {
+        font-size: 3.2rem;
+        display: block;
+        margin-bottom: 10px;
+        animation: bobble 3s ease-in-out infinite;
+      }
+
+      @keyframes bobble {
+        0%, 100% { transform: translateY(0); }
+        50%       { transform: translateY(-6px); }
+      }
+
+      h1 {
+        font-size: 1.55rem;
+        font-weight: 700;
+        color: #3d2b1f;
+        margin-bottom: 6px;
+        letter-spacing: 0.06em;
+        text-shadow: 0 1px 0 #fff8e8;
+      }
+
+      .subtitle {
+        font-size: 0.88rem;
+        color: #8a6a40;
+        margin-bottom: 32px;
+        letter-spacing: 0.08em;
+      }
+
+      .input-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+
+      input[type="number"] {
+        flex: 1;
+        background: #fffbf0;
+        border: 2px solid #c8a96e;
+        border-radius: 10px;
+        padding: 13px 16px;
+        font-size: 1.3rem;
+        font-family: inherit;
+        color: #3d2b1f;
+        text-align: center;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        -moz-appearance: textfield;
+      }
+
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+      input[type="number"]:focus {
+        border-color: #8a6a30;
+        box-shadow: 0 0 0 3px #c8a96e44;
+      }
+
+      .btn {
+        border: none;
+        border-radius: 10px;
+        padding: 13px 18px;
+        font-size: 0.95rem;
+        font-family: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.15s, filter 0.15s;
+        letter-spacing: 0.04em;
+      }
+
+      .btn:active { transform: scale(0.95); }
+
+      .btn-primary {
+        background: linear-gradient(160deg, #6a9a3a, #4a7a22);
+        color: #f5f0e0;
+        flex-shrink: 0;
+        border: 2px solid #3a6014;
+        text-shadow: 0 1px 2px #0003;
+        box-shadow: 0 3px 0 #2d4e10;
+      }
+
+      .btn-primary:hover  { filter: brightness(1.1); }
+      .btn-primary:active { box-shadow: none; transform: translateY(3px) scale(0.97); }
+
+      .btn-primary:disabled {
+        background: #b0b09080;
+        border-color: #888870;
+        box-shadow: none;
+        cursor: default;
+        filter: none;
+      }
+
+      .btn-reset {
+        width: 100%;
+        background: linear-gradient(160deg, #e8c87a, #c8a040);
+        color: #3d2b10;
+        border: 2px solid #9a7820;
+        box-shadow: 0 3px 0 #7a5c10;
+        margin-top: 8px;
+        text-shadow: 0 1px 0 #fff8;
+      }
+
+      .btn-reset:hover  { filter: brightness(1.08); }
+      .btn-reset:active { box-shadow: none; transform: translateY(3px) scale(0.97); }
+
+      .result {
+        min-height: 54px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        letter-spacing: 0.04em;
+        border: 2px solid transparent;
+        transition: background 0.3s, color 0.3s;
+      }
+
+      .result.hint-high {
+        background: #ffe0d0;
+        border-color: #d08060;
+        color: #8a3820;
+      }
+
+      .result.hint-low {
+        background: #d0e8ff;
+        border-color: #6090c0;
+        color: #1a4a80;
+      }
+
+      .result.correct {
+        background: #d8f0c8;
+        border-color: #60a840;
+        color: #1e5c10;
+      }
+
+      .tries {
+        font-size: 0.82rem;
+        color: #9a8060;
+        margin-bottom: 2px;
+        letter-spacing: 0.06em;
+      }
+
+      @keyframes pop {
+        0%   { transform: scale(1); }
+        40%  { transform: scale(1.07); }
+        100% { transform: scale(1); }
+      }
+
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%      { transform: translateX(-7px); }
+        40%      { transform: translateX(7px); }
+        60%      { transform: translateX(-5px); }
+        80%      { transform: translateX(5px); }
+      }
+
+      /* 葉っぱの装飾 */
+      .deco {
+        position: absolute;
+        font-size: 1.4rem;
+        opacity: 0.55;
+        pointer-events: none;
+      }
+
+      .deco-tl { top: 12px; left: 52px; transform: rotate(-20deg); }
+      .deco-tr { top: 12px; right: 18px; transform: rotate(20deg); }
+      .deco-bl { bottom: 18px; left: 18px; transform: rotate(15deg); }
+      .deco-br { bottom: 18px; right: 18px; transform: rotate(-15deg); }
     </style>
   </head>
   <body>
-    <main class="container">
-      <h1>数当てゲーム (1~20)</h1>
 
-      <div id="guessGame">
-        <label for="guessField">予想: </label>
-        <input type="number" min="1" max="20" id="guessField" />
-        <input type="submit" value="予想を入力" id="guessSubmit" />
-        <p id="guessResult"></p>
+    <!-- 雲 -->
+    <div class="clouds">
+      <div class="cloud c1"></div>
+      <div class="cloud c2"></div>
+      <div class="cloud c3"></div>
+    </div>
+
+    <!-- 木（左） -->
+    <div class="tree tree-left">
+      <svg width="80" height="160" viewBox="0 0 80 160">
+        <rect x="34" y="100" width="12" height="60" fill="#6b4c2a" rx="4"/>
+        <ellipse cx="40" cy="88" rx="32" ry="36" fill="#3d6b24"/>
+        <ellipse cx="40" cy="68" rx="24" ry="28" fill="#4e8030"/>
+        <ellipse cx="40" cy="50" rx="16" ry="20" fill="#5a9438"/>
+      </svg>
+    </div>
+
+    <!-- 木（右） -->
+    <div class="tree tree-right">
+      <svg width="80" height="160" viewBox="0 0 80 160">
+        <rect x="34" y="100" width="12" height="60" fill="#6b4c2a" rx="4"/>
+        <ellipse cx="40" cy="88" rx="32" ry="36" fill="#3d6b24"/>
+        <ellipse cx="40" cy="68" rx="24" ry="28" fill="#4e8030"/>
+        <ellipse cx="40" cy="50" rx="16" ry="20" fill="#5a9438"/>
+      </svg>
+    </div>
+
+    <!-- 草 -->
+    <div class="grass-layer">
+      <div class="grass-blades">
+        <!-- JS で生成 -->
       </div>
-    </main>
+    </div>
+
+    <!-- カード -->
+    <div class="card">
+      <a href="index.html" class="back-link">← もどる</a>
+      <span class="deco deco-tl">🌿</span>
+      <span class="deco deco-tr">🌸</span>
+      <span class="deco deco-bl">🍀</span>
+      <span class="deco deco-br">🌼</span>
+
+      <span class="game-icon">🌰</span>
+      <h1>数当てゲーム</h1>
+      <p class="subtitle">1 から 20 の数を当ててみよう</p>
+
+      <div class="input-row">
+        <input type="number" min="1" max="20" id="guessField" placeholder="？" />
+        <button class="btn btn-primary" id="guessSubmit">予想する</button>
+      </div>
+
+      <div class="result" id="guessResult"></div>
+      <p class="tries" id="triesCount"></p>
+
+      <button class="btn btn-reset" id="guessReset">🍃 もう一度あそぶ</button>
+    </div>
 
     <script>
-      // 1から20までのランダムな整数を生成し、コンソールにログを出力
-      let answerNumber = Math.floor(Math.random() * 20) + 1;
-      console.log("正解は" + answerNumber);
-
-      // 数値入力フィールドを取得
-      let guessField = document.querySelector("#guessField");
-
-      // submitボタンを取得
-      let guessSubmit = document.querySelector("#guessSubmit");
-
-      // 結果を表示する要素を取得
-      let guessResult = document.querySelector("#guessResult");
-
-      // ユーザーの入力をチェックし、結果を表示
-      function checkGuess() {
-        // ユーザの入力した値を取得
-        let userGuess = Number(guessField.value);
-
-        if (userGuess === answerNumber) {
-          // ユーザの入力が正解
-          guessResult.textContent = "正解です！";
-        } else if (userGuess < answerNumber) {
-          // ユーザの入力が正解より小さい
-          guessResult.textContent = "もっと大きいです";
-        } else if (userGuess > answerNumber) {
-          // ユーザの入力が正解より大きい
-          guessResult.textContent = "もっと小さいです";
-        }
+      // 草を生成
+      const blades = document.querySelector(".grass-blades");
+      for (let i = 0; i < 60; i++) {
+        const b = document.createElement("div");
+        b.className = "blade";
+        const h = 24 + Math.random() * 40;
+        b.style.height = h + "px";
+        b.style.animationDelay = (Math.random() * 3) + "s";
+        blades.appendChild(b);
       }
 
-      // submitがクリックされたときに、checkGuess関数を呼び出す
+      let answerNumber = Math.floor(Math.random() * 20) + 1;
+      let tries = 0;
+      console.log("正解は" + answerNumber);
+
+      const guessField  = document.querySelector("#guessField");
+      const guessSubmit = document.querySelector("#guessSubmit");
+      const guessResult = document.querySelector("#guessResult");
+      const triesCount  = document.querySelector("#triesCount");
+
+      function checkGuess() {
+        const userGuess = Number(guessField.value);
+        if (!userGuess) return;
+
+        tries++;
+        guessResult.className = "result";
+        guessResult.style.animation = "";
+        void guessResult.offsetWidth;
+
+        if (userGuess === answerNumber) {
+          guessResult.textContent = `🎉 正解！ ${answerNumber} でした！`;
+          guessResult.classList.add("correct");
+          guessResult.style.animation = "pop 0.4s ease";
+          guessSubmit.disabled = true;
+          guessField.disabled = true;
+          triesCount.textContent = `${tries} 回で正解！すごい！`;
+        } else if (userGuess < answerNumber) {
+          guessResult.textContent = "🌱 もっと大きいよ";
+          guessResult.classList.add("hint-low");
+          guessResult.style.animation = "shake 0.4s ease";
+          triesCount.textContent = `${tries} 回目`;
+        } else {
+          guessResult.textContent = "🍂 もっと小さいよ";
+          guessResult.classList.add("hint-high");
+          guessResult.style.animation = "shake 0.4s ease";
+          triesCount.textContent = `${tries} 回目`;
+        }
+
+        guessField.value = "";
+        guessField.focus();
+      }
+
+      function resetGame() {
+        answerNumber = Math.floor(Math.random() * 20) + 1;
+        tries = 0;
+        console.log("正解は" + answerNumber);
+        guessField.value = "";
+        guessField.disabled = false;
+        guessSubmit.disabled = false;
+        guessResult.textContent = "";
+        guessResult.className = "result";
+        guessResult.style.animation = "";
+        triesCount.textContent = "";
+        guessField.focus();
+      }
+
       guessSubmit.addEventListener("click", checkGuess);
+      guessField.addEventListener("keydown", (e) => { if (e.key === "Enter") checkGuess(); });
+      document.querySelector("#guessReset").addEventListener("click", resetGame);
     </script>
   </body>
 </html>

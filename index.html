@@ -12,307 +12,414 @@
       }
 
       body {
-        font-family: "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif;
-        background: #0f0f1a;
-        color: #e0e0f0;
+        font-family: "Hiragino Mincho ProN", "Yu Mincho", "Georgia", serif;
         min-height: 100vh;
+        background: linear-gradient(180deg,
+          #a8d8ea 0%,
+          #c9e8f5 32%,
+          #e8f4e8 66%,
+          #7ab648 66%,
+          #5a8a3c 100%
+        );
         overflow-x: hidden;
       }
 
-      /* Animated background */
-      body::before {
-        content: "";
+      /* 雲 */
+      .clouds {
         position: fixed;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(ellipse at 20% 50%, #1a0a3e 0%, transparent 50%),
-                    radial-gradient(ellipse at 80% 20%, #0a1a3e 0%, transparent 50%),
-                    radial-gradient(ellipse at 50% 80%, #0a2a1a 0%, transparent 50%);
-        z-index: -1;
-        animation: bgShift 12s ease-in-out infinite alternate;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 60%;
+        pointer-events: none;
+        z-index: 0;
       }
 
-      @keyframes bgShift {
-        0%   { transform: translate(0, 0) rotate(0deg); }
-        100% { transform: translate(2%, 2%) rotate(1deg); }
+      .cloud {
+        position: absolute;
+        background: white;
+        border-radius: 50px;
+        opacity: 0.88;
+        filter: blur(1px);
       }
 
-      /* Hero */
-      .hero {
+      .cloud::before,
+      .cloud::after {
+        content: "";
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+      }
+
+      .c1 { width: 130px; height: 38px; top: 8%;  animation: drift 30s linear infinite; left: -160px; }
+      .c1::before { width: 64px; height: 64px; top: -30px; left: 20px; }
+      .c1::after  { width: 48px; height: 48px; top: -20px; left: 60px; }
+
+      .c2 { width: 100px; height: 28px; top: 20%; animation: drift 42s linear infinite; animation-delay: -14s; left: -120px; opacity: 0.72; }
+      .c2::before { width: 48px; height: 48px; top: -24px; left: 14px; }
+      .c2::after  { width: 34px; height: 34px; top: -15px; left: 44px; }
+
+      .c3 { width: 160px; height: 44px; top: 5%;  animation: drift 52s linear infinite; animation-delay: -22s; left: -180px; opacity: 0.62; }
+      .c3::before { width: 76px; height: 76px; top: -38px; left: 24px; }
+      .c3::after  { width: 56px; height: 56px; top: -26px; left: 76px; }
+
+      .c4 { width: 90px; height: 24px; top: 14%; animation: drift 36s linear infinite; animation-delay: -8s; left: -110px; opacity: 0.55; }
+      .c4::before { width: 42px; height: 42px; top: -20px; left: 10px; }
+      .c4::after  { width: 30px; height: 30px; top: -13px; left: 38px; }
+
+      @keyframes drift {
+        from { transform: translateX(0); }
+        to   { transform: translateX(calc(100vw + 220px)); }
+      }
+
+      /* 草 */
+      .grass-layer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 36%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .grass-blades {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-end;
+      }
+
+      .blade {
+        width: 6px;
+        background: linear-gradient(to top, #3d6b24, #7ab648);
+        border-radius: 3px 3px 0 0;
+        transform-origin: bottom center;
+        animation: sway 3s ease-in-out infinite;
+      }
+
+      .blade:nth-child(even) { animation-direction: alternate-reverse; }
+      .blade:nth-child(3n)   { animation-duration: 3.6s; }
+      .blade:nth-child(5n)   { animation-duration: 2.7s; }
+
+      @keyframes sway {
+        0%, 100% { transform: rotate(-4deg); }
+        50%       { transform: rotate(4deg); }
+      }
+
+      /* 木 */
+      .tree {
+        position: fixed;
+        bottom: 32%;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .tree-left  { left: 1%; }
+      .tree-right { right: 1%; transform: scaleX(-1); }
+
+      /* コンテンツ */
+      main {
+        position: relative;
+        z-index: 10;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        text-align: center;
-        padding: 100px 24px 60px;
+        padding: 60px 24px 80px;
+        gap: 40px;
+      }
+
+      /* 共通カード */
+      .ghibli-card {
+        background: linear-gradient(160deg, #fdf3dc, #f5e6c0);
+        border: 3px solid #c8a96e;
+        border-radius: 20px;
+        padding: 40px 36px;
+        width: min(600px, 92vw);
         position: relative;
+        box-shadow:
+          0 8px 32px #0000002a,
+          inset 0 1px 0 #fffde8,
+          0 0 0 6px #e8d5a088;
+        animation: fadeIn 0.7s ease both;
+      }
+
+      .ghibli-card::before {
+        content: "";
+        position: absolute;
+        inset: 6px;
+        border: 1px dashed #c8a96e66;
+        border-radius: 14px;
+        pointer-events: none;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(28px) scale(0.97); }
+        to   { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      /* ヒーロー */
+      .hero-card {
+        text-align: center;
+        animation-delay: 0s;
       }
 
       .hero-badge {
         display: inline-block;
-        background: linear-gradient(135deg, #6c63ff33, #00d4aa33);
-        border: 1px solid #6c63ff55;
+        background: #e8d5a0;
+        border: 1px solid #c8a96e;
         border-radius: 999px;
-        padding: 6px 18px;
+        padding: 5px 18px;
         font-size: 0.78rem;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        color: #a89fff;
-        margin-bottom: 24px;
+        letter-spacing: 0.18em;
+        color: #8a6a30;
+        margin-bottom: 18px;
       }
 
-      .hero h1 {
-        font-size: clamp(2.5rem, 7vw, 5rem);
-        font-weight: 800;
-        line-height: 1.1;
-        background: linear-gradient(135deg, #ffffff 0%, #a89fff 50%, #00d4aa 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        margin-bottom: 20px;
-        animation: fadeUp 0.8s ease both;
+      .hero-card h1 {
+        font-size: clamp(2rem, 6vw, 3.4rem);
+        font-weight: 700;
+        color: #3d2b1f;
+        letter-spacing: 0.06em;
+        margin-bottom: 10px;
+        text-shadow: 0 1px 0 #fff8e8;
       }
 
-      .hero p {
-        font-size: 1.2rem;
-        color: #9090b0;
-        max-width: 480px;
-        line-height: 1.7;
-        animation: fadeUp 0.8s 0.15s ease both;
-        margin-bottom: 48px;
-      }
-
-      @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(24px); }
-        to   { opacity: 1; transform: translateY(0); }
-      }
-
-      /* Mascot */
-      .mascot-wrapper {
-        animation: fadeUp 0.8s 0.3s ease both;
-        margin-bottom: 64px;
+      .hero-card p {
+        font-size: 1.05rem;
+        color: #8a6a40;
+        line-height: 1.8;
+        margin-bottom: 28px;
+        letter-spacing: 0.04em;
       }
 
       .mascot-wrapper img {
-        width: 140px;
-        height: 140px;
+        width: 120px;
+        height: 120px;
         object-fit: contain;
-        filter: drop-shadow(0 0 32px #6c63ff88);
-        animation: float 4s ease-in-out infinite;
+        filter: drop-shadow(0 4px 16px #c8a96e88);
+        animation: bobble 3.5s ease-in-out infinite;
       }
 
-      @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50%       { transform: translateY(-14px); }
+      @keyframes bobble {
+        0%, 100% { transform: translateY(0); }
+        50%       { transform: translateY(-10px); }
       }
 
-      /* Links section */
-      .links-section {
-        max-width: 680px;
-        margin: 0 auto;
-        padding: 0 24px 80px;
-        animation: fadeUp 0.8s 0.45s ease both;
-      }
+      /* 天気 */
+      .weather-card { animation-delay: 0.15s; }
 
-      .links-section h2 {
+      .section-title {
         text-align: center;
-        font-size: 0.85rem;
-        letter-spacing: 0.2em;
-        text-transform: uppercase;
-        color: #6060a0;
-        margin-bottom: 24px;
-      }
-
-      .link-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 16px;
-      }
-
-      .link-card {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        background: #ffffff08;
-        border: 1px solid #ffffff12;
-        border-radius: 16px;
-        padding: 20px 24px;
-        text-decoration: none;
-        color: #e0e0f0;
-        transition: background 0.25s, border-color 0.25s, transform 0.25s;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .link-card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, #6c63ff22, transparent);
-        opacity: 0;
-        transition: opacity 0.25s;
-      }
-
-      .link-card:hover {
-        background: #ffffff12;
-        border-color: #6c63ff66;
-        transform: translateY(-3px);
-      }
-
-      .link-card:hover::before {
-        opacity: 1;
-      }
-
-      .link-icon {
-        font-size: 1.8rem;
-        flex-shrink: 0;
-      }
-
-      .link-text strong {
-        display: block;
-        font-size: 1rem;
-        font-weight: 600;
-        margin-bottom: 2px;
-      }
-
-      .link-text span {
         font-size: 0.82rem;
-        color: #7070a0;
-      }
-
-      .link-arrow {
-        margin-left: auto;
-        color: #4040a0;
-        font-size: 1.1rem;
-        transition: transform 0.25s, color 0.25s;
-      }
-
-      .link-card:hover .link-arrow {
-        transform: translateX(4px);
-        color: #a89fff;
-      }
-
-      /* Weather */
-      .weather-section {
-        max-width: 680px;
-        margin: 0 auto;
-        padding: 0 24px 48px;
-        animation: fadeUp 0.8s 0.35s ease both;
-      }
-
-      .weather-section h2 {
-        text-align: center;
-        font-size: 0.85rem;
-        letter-spacing: 0.2em;
+        letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: #6060a0;
-        margin-bottom: 24px;
+        color: #9a7a40;
+        margin-bottom: 20px;
       }
 
-      .weather-card {
-        background: #ffffff08;
-        border: 1px solid #ffffff12;
-        border-radius: 20px;
-        padding: 28px 32px;
+      .weather-inner {
         display: flex;
         align-items: center;
-        gap: 24px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .weather-card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(135deg, #00d4aa15, #6c63ff10);
-        pointer-events: none;
+        gap: 20px;
+        background: #fffbf0;
+        border: 2px solid #c8a96e;
+        border-radius: 12px;
+        padding: 20px 24px;
       }
 
       .weather-icon {
-        font-size: 4rem;
+        font-size: 3.4rem;
         line-height: 1;
         flex-shrink: 0;
       }
 
-      .weather-info {
-        flex: 1;
-      }
-
       .weather-temp {
-        font-size: 2.8rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #ffffff, #00d4aa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        font-size: 2.4rem;
+        font-weight: 700;
+        color: #3d2b1f;
         line-height: 1;
         margin-bottom: 4px;
       }
 
       .weather-desc {
         font-size: 1rem;
-        color: #9090b0;
-        margin-bottom: 6px;
+        color: #6a4a20;
+        margin-bottom: 4px;
       }
 
       .weather-location {
-        font-size: 0.82rem;
-        color: #5050a0;
-        display: flex;
-        align-items: center;
-        gap: 4px;
+        font-size: 0.8rem;
+        color: #9a7a50;
       }
 
       .weather-loading {
-        color: #5050a0;
         font-size: 0.95rem;
+        color: #9a7a50;
         text-align: center;
         width: 100%;
         padding: 8px 0;
       }
 
       .weather-error {
-        color: #a06060;
         font-size: 0.9rem;
+        color: #8a4a30;
         text-align: center;
         width: 100%;
       }
 
-      /* Footer */
-      footer {
-        text-align: center;
-        padding: 24px;
-        font-size: 0.78rem;
-        color: #3a3a5c;
-        border-top: 1px solid #ffffff08;
+      /* リンク */
+      .links-card { animation-delay: 0.3s; }
+
+      .link-items {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
       }
+
+      .link-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: #fffbf0;
+        border: 2px solid #c8a96e;
+        border-radius: 12px;
+        padding: 16px 20px;
+        text-decoration: none;
+        color: #3d2b1f;
+        transition: background 0.2s, transform 0.2s, border-color 0.2s;
+      }
+
+      .link-item:hover {
+        background: #f5e8c0;
+        border-color: #9a7820;
+        transform: translateY(-3px);
+      }
+
+      .link-icon {
+        font-size: 1.7rem;
+        flex-shrink: 0;
+      }
+
+      .link-text strong {
+        display: block;
+        font-size: 0.98rem;
+        font-weight: 700;
+        margin-bottom: 2px;
+        letter-spacing: 0.03em;
+      }
+
+      .link-text span {
+        font-size: 0.78rem;
+        color: #9a7a50;
+      }
+
+      .link-arrow {
+        margin-left: auto;
+        color: #c8a96e;
+        font-size: 1rem;
+        transition: transform 0.2s, color 0.2s;
+      }
+
+      .link-item:hover .link-arrow {
+        transform: translateX(4px);
+        color: #6a4a10;
+      }
+
+      /* フッター */
+      footer {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 16px 24px 32px;
+        font-size: 0.78rem;
+        color: #5a8a3c;
+        letter-spacing: 0.08em;
+      }
+
+      /* 葉っぱ装飾 */
+      .deco {
+        position: absolute;
+        font-size: 1.3rem;
+        opacity: 0.5;
+        pointer-events: none;
+      }
+
+      .deco-tl { top: 14px; left: 50px; transform: rotate(-18deg); }
+      .deco-tr { top: 14px; right: 18px; transform: rotate(18deg); }
+      .deco-bl { bottom: 16px; left: 18px; transform: rotate(12deg); }
+      .deco-br { bottom: 16px; right: 18px; transform: rotate(-12deg); }
     </style>
   </head>
   <body>
+
+    <!-- 雲 -->
+    <div class="clouds">
+      <div class="cloud c1"></div>
+      <div class="cloud c2"></div>
+      <div class="cloud c3"></div>
+      <div class="cloud c4"></div>
+    </div>
+
+    <!-- 木（左） -->
+    <div class="tree tree-left">
+      <svg width="90" height="180" viewBox="0 0 80 180">
+        <rect x="34" y="110" width="12" height="70" fill="#6b4c2a" rx="4"/>
+        <ellipse cx="40" cy="98"  rx="34" ry="38" fill="#3d6b24"/>
+        <ellipse cx="40" cy="76"  rx="26" ry="30" fill="#4e8030"/>
+        <ellipse cx="40" cy="56"  rx="18" ry="22" fill="#5a9438"/>
+      </svg>
+    </div>
+
+    <!-- 木（右） -->
+    <div class="tree tree-right">
+      <svg width="90" height="180" viewBox="0 0 80 180">
+        <rect x="34" y="110" width="12" height="70" fill="#6b4c2a" rx="4"/>
+        <ellipse cx="40" cy="98"  rx="34" ry="38" fill="#3d6b24"/>
+        <ellipse cx="40" cy="76"  rx="26" ry="30" fill="#4e8030"/>
+        <ellipse cx="40" cy="56"  rx="18" ry="22" fill="#5a9438"/>
+      </svg>
+    </div>
+
+    <!-- 草 -->
+    <div class="grass-layer">
+      <div class="grass-blades" id="grassBlades"></div>
+    </div>
+
     <main>
-      <section class="hero">
-        <div class="hero-badge">✦ Welcome</div>
+      <!-- ヒーロー -->
+      <div class="ghibli-card hero-card">
+        <span class="deco deco-tl">🌿</span>
+        <span class="deco deco-tr">🌸</span>
+        <span class="deco deco-bl">🍀</span>
+        <span class="deco deco-br">🌼</span>
+        <div class="hero-badge">✦ ようこそ ✦</div>
         <h1>Example Website</h1>
         <p>これはウェブサイトです。<br>いろんなサイトへ飛び立とう。</p>
         <div class="mascot-wrapper">
           <img src="computer01_smile.png" alt="笑顔のコンピューター" />
         </div>
-      </section>
+      </div>
 
-      <section class="weather-section">
-        <h2>Today's Weather</h2>
-        <div class="weather-card" id="weather-card">
-          <div class="weather-loading" id="weather-loading">📡 現在地の天気を取得中…</div>
+      <!-- 天気 -->
+      <div class="ghibli-card weather-card">
+        <span class="deco deco-tr">☁️</span>
+        <p class="section-title">今日のお天気</p>
+        <div class="weather-inner" id="weather-card">
+          <div class="weather-loading" id="weather-loading">🌿 現在地のお天気を調べています…</div>
         </div>
-      </section>
+      </div>
 
-      <section class="links-section">
-        <h2>Links</h2>
-        <div class="link-cards">
-          <a href="https://www.google.com/" class="link-card">
+      <!-- リンク -->
+      <div class="ghibli-card links-card">
+        <span class="deco deco-tl">🗺️</span>
+        <span class="deco deco-tr">✉️</span>
+        <p class="section-title">おでかけ先</p>
+        <div class="link-items">
+          <a href="https://www.google.com/" class="link-item">
             <span class="link-icon">🔍</span>
             <div class="link-text">
               <strong>Google</strong>
@@ -320,7 +427,7 @@
             </div>
             <span class="link-arrow">→</span>
           </a>
-          <a href="https://www.yahoo.co.jp/" class="link-card">
+          <a href="https://www.yahoo.co.jp/" class="link-item">
             <span class="link-icon">📰</span>
             <div class="link-text">
               <strong>Yahoo! JAPAN</strong>
@@ -328,13 +435,32 @@
             </div>
             <span class="link-arrow">→</span>
           </a>
+          <a href="guessgame.html" class="link-item">
+            <span class="link-icon">🌰</span>
+            <div class="link-text">
+              <strong>数当てゲーム</strong>
+              <span>1〜20 の数を当ててみよう</span>
+            </div>
+            <span class="link-arrow">→</span>
+          </a>
         </div>
-      </section>
+      </div>
     </main>
 
-    <footer>© 2026 Example Website</footer>
+    <footer>© 2026 Example Website 🌱</footer>
 
     <script>
+      // 草を生成
+      const blades = document.getElementById("grassBlades");
+      for (let i = 0; i < 70; i++) {
+        const b = document.createElement("div");
+        b.className = "blade";
+        b.style.height = (22 + Math.random() * 44) + "px";
+        b.style.animationDelay = (Math.random() * 3) + "s";
+        blades.appendChild(b);
+      }
+
+      // 天気
       const WMO_CODES = {
         0: ["☀️", "快晴"],
         1: ["🌤️", "ほぼ晴れ"], 2: ["⛅", "一部曇り"], 3: ["☁️", "曇り"],
@@ -364,15 +490,13 @@
 
       function renderWeather(data, cityName) {
         const cur = data.current;
-        const code = cur.weathercode;
-        const [icon, desc] = WMO_CODES[code] ?? ["🌡️", "不明"];
+        const [icon, desc] = WMO_CODES[cur.weathercode] ?? ["🌡️", "不明"];
         const temp = Math.round(cur.temperature_2m);
         const wind = Math.round(cur.windspeed_10m);
         const location = cityName ? `📍 ${cityName}` : "📍 現在地";
-
         document.getElementById("weather-card").innerHTML = `
           <div class="weather-icon">${icon}</div>
-          <div class="weather-info">
+          <div>
             <div class="weather-temp">${temp}°C</div>
             <div class="weather-desc">${desc}</div>
             <div class="weather-location">${location} ・ 風速 ${wind} km/h</div>
@@ -394,7 +518,7 @@
             ]);
             renderWeather(data, city);
           } catch {
-            showError("天気データの取得に失敗しました");
+            showError("お天気の取得に失敗しました");
           }
         },
         () => showError("位置情報の取得が拒否されました"),
